@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>A Special Video for Mary</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+            border-radius: 12px;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <h1>A Special Video for Mary</h1>
+        <p>We made this video just for you. We hope you enjoy it!</p>
+        <div class="video-container">
+            <iframe
+                src="https://share.synthesia.io/embed/19544472-2dc8-4f83-a0f1-b5c6020033a4"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </main>
+</body>
+</html>
