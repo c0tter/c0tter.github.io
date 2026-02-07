@@ -3,9 +3,221 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>hey</title>
+    <title>Poynton Round Table | Community, Friendship & Fundraising</title>
+    <meta name="description" content="Poynton Round Table brings people together for social events, adventures and community fundraising in Cheshire.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>hey</h1>
+
+<!-- Navigation -->
+<nav class="nav" id="nav">
+    <div class="container nav-inner">
+        <a href="#" class="nav-brand">
+            <span class="nav-logo">RT</span>
+            <span class="nav-title">Poynton Round Table</span>
+        </a>
+        <button class="nav-toggle" aria-label="Toggle menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#events">Events</a>
+            <a href="#donations">Donations</a>
+            <a href="#contact">Contact</a>
+            <a href="https://www.justgiving.com/poynton-roundtable" target="_blank" rel="noopener noreferrer" class="btn btn-sm">Donate</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero -->
+<header class="hero">
+    <div class="container">
+        <p class="hero-tag">Registered Charity — Cheshire</p>
+        <h1>Get involved.<br>Have fun &amp; give back.</h1>
+        <p class="hero-sub">Poynton Round Table brings people together for social nights, memorable activities and community fundraising. We welcome new members who want to meet friends, try something different, and help local causes.</p>
+        <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">Join Us</a>
+            <a href="https://www.justgiving.com/poynton-roundtable" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Donate</a>
+        </div>
+        <div class="hero-social">
+            <a href="https://www.facebook.com/PoyntonRoundTable" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="https://www.instagram.com/poyntonrt/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- What We Do -->
+<section class="section" id="about">
+    <div class="container">
+        <h2 class="section-title">What we do</h2>
+        <p class="section-intro">Poynton Round Table is a friendly, social group for people aged 18-45 who want to meet new people, try new activities and support the local community. We meet regularly and welcome visitors to attend a few events for free.</p>
+        <div class="cards">
+            <div class="card">
+                <div class="card-icon">&#127946;</div>
+                <h3>Try new activities</h3>
+                <p>Kayaking, rock climbing, go-karting, brewery tours, comedy nights, indoor skydiving and much more.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#129309;</div>
+                <h3>Meet new people</h3>
+                <p>Join people from across Poynton and nearby towns to make long-lasting friendships over shared experiences.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">&#10084;&#65039;</div>
+                <h3>Give back locally</h3>
+                <p>We raise funds each year for local charities through events like the Poynton Bonfire and Christmas float.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Events -->
+<section class="section section-alt" id="events">
+    <div class="container">
+        <h2 class="section-title">Events</h2>
+        <p class="section-intro">We run a varied programme of social events and activities throughout the year. Here are some highlights.</p>
+        <div class="events-grid">
+            <div class="event-item">
+                <span class="event-date">Nov 2023</span>
+                <span class="event-name">Bonfire Weekend</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">Nov 2023</span>
+                <span class="event-name">Comedy Night</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">Dec 2023</span>
+                <span class="event-name">Poynton Christmas Fest</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">Jan 2024</span>
+                <span class="event-name">Go Karting</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">Feb 2024</span>
+                <span class="event-name">Lazer Quest &amp; Bowling</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">Mar 2024</span>
+                <span class="event-name">moviEscape (Escape Room)</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">Apr 2024</span>
+                <span class="event-name">Awesome Walls Climbing</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">May 2024</span>
+                <span class="event-name">Combat Archery</span>
+            </div>
+            <div class="event-item">
+                <span class="event-date">Jun 2024</span>
+                <span class="event-name">Water Sports at Sale Water Park</span>
+            </div>
+        </div>
+        <p class="section-note">Follow us on social media for the latest events.</p>
+    </div>
+</section>
+
+<!-- Donations -->
+<section class="section" id="donations">
+    <div class="container">
+        <h2 class="section-title">Donations &amp; Impact</h2>
+        <p class="section-intro">Over the past 10 years we have given more than <strong>&pound;150,000</strong> to charities, clubs and community projects in and around Poynton.</p>
+
+        <div class="stats">
+            <div class="stat">
+                <span class="stat-number">&pound;150k+</span>
+                <span class="stat-label">donated over 10 years</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">&pound;20k+</span>
+                <span class="stat-label">donated in 2022 alone</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number">40+</span>
+                <span class="stat-label">local groups supported</span>
+            </div>
+        </div>
+
+        <h3 class="subsection-title">Recent recipients include</h3>
+        <div class="recipients">
+            <span class="tag">Poynton Pedals for All</span>
+            <span class="tag">Poynton Community Larder</span>
+            <span class="tag">Poynton Heritage Garden</span>
+            <span class="tag">RT Children's Wish</span>
+            <span class="tag">Poynton Community Support</span>
+            <span class="tag">Poynton 5th Guides</span>
+            <span class="tag">Self Care Matters</span>
+            <span class="tag">Richmond Rovers Girls</span>
+            <span class="tag">Bramhall Scouts</span>
+            <span class="tag">Poynton Sports Club</span>
+            <span class="tag">Buxton Mountain Rescue</span>
+            <span class="tag">Edale Mountain Rescue</span>
+            <span class="tag">Local school PTAs</span>
+        </div>
+
+        <p class="quote">"Not bad for a load of blokes from down the pub..."</p>
+
+        <div class="donate-cta">
+            <p>Want to support our work?</p>
+            <a href="https://www.justgiving.com/poynton-roundtable" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Donate via JustGiving</a>
+        </div>
+    </div>
+</section>
+
+<!-- Contact -->
+<section class="section section-alt" id="contact">
+    <div class="container">
+        <h2 class="section-title">Get in touch</h2>
+        <p class="section-intro">We're always happy to welcome new members. Your first few events are free — come along and see what we're about.</p>
+
+        <div class="contact-grid">
+            <div class="contact-card">
+                <h3>Join us</h3>
+                <p>Message us on social media or give us a call. We'll invite you along to an upcoming event.</p>
+                <p class="contact-detail">01625 838181</p>
+            </div>
+            <div class="contact-card">
+                <h3>Request funding</h3>
+                <p>Local charity or community group? Send us a short outline of your organisation and what you need funding for.</p>
+            </div>
+            <div class="contact-card">
+                <h3>Poynton Bonfire</h3>
+                <p>For bonfire enquiries visit <a href="http://www.PoyntonBonfire.co.uk" target="_blank" rel="noopener noreferrer">PoyntonBonfire.co.uk</a></p>
+                <p class="contact-note">We do not require wood donations.</p>
+            </div>
+        </div>
+
+        <div class="social-links">
+            <a href="https://www.facebook.com/PoyntonRoundTable" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Facebook</a>
+            <a href="https://www.instagram.com/poyntonrt/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Instagram</a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container footer-inner">
+        <div class="footer-brand">
+            <span class="nav-logo">RT</span>
+            <span>Poynton &amp; District Round Table</span>
+        </div>
+        <p class="footer-copy">&copy; 2026 Poynton &amp; District Round Table. Registered Charity.</p>
+    </div>
+</footer>
+
+<script>
+// Sticky nav on scroll
+window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+});
+</script>
+
 </body>
 </html>
