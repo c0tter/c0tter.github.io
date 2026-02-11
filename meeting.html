@@ -700,7 +700,7 @@ const itemTitles = {
     item_9: 'AOB & Next Meeting',
 };
 
-async function submitItem(btn) {
+function submitItem(btn) {
     const name = document.getElementById('attendee-name').value.trim();
     if (!name) {
         document.getElementById('attendee-name').focus();
@@ -727,51 +727,30 @@ async function submitItem(btn) {
         return;
     }
 
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-    const status = btn.nextElementSibling;
-
-    let body = `Meeting note from ${name}\n`;
-    body += `PDRT 1064 Business Meeting — 12 Feb 2026\n`;
-    body += `${'─'.repeat(40)}\n\n`;
+    let body = `Meeting note from ${name}\n\n`;
     body += `${itemNum}. ${title}\n`;
-    if (voteVal) body += `   Vote: ${voteVal}\n`;
-    if (notes) body += `   ${notes}\n`;
+    if (voteVal) body += `Vote: ${voteVal}\n`;
+    if (notes) body += `${notes}\n`;
 
-    try {
-        const formData = new FormData();
-        formData.append('name', name);
-        formData.append('_subject', `PDRT — ${itemNum}. ${title} — ${name}`);
-        formData.append('message', body);
-        formData.append('_captcha', 'false');
-        formData.append('_template', 'box');
+    const subject = encodeURIComponent(`PDRT — ${itemNum}. ${title} — ${name}`);
+    const mailBody = encodeURIComponent(body);
 
-        const res = await fetch('https://formsubmit.co/ajax/info@poyntonroundtable.com', {
-            method: 'POST',
-            body: formData
-        });
+    // Open email in new window so we stay on the page
+    const mailLink = document.createElement('a');
+    mailLink.href = `mailto:info@poyntonroundtable.com?subject=${subject}&body=${mailBody}`;
+    mailLink.target = '_blank';
+    mailLink.click();
 
-        if (res.ok) {
-            btn.textContent = 'Sent';
-            btn.classList.add('sent');
-            status.classList.add('show');
+    // Show sent confirmation
+    const status = btn.nextElementSibling;
+    btn.textContent = 'Sent';
+    btn.classList.add('sent');
+    status.classList.add('show');
 
-            setTimeout(() => {
-                btn.disabled = false;
-                btn.textContent = 'Update';
-                btn.classList.remove('sent');
-            }, 2000);
-        } else {
-            throw new Error('Send failed');
-        }
-    } catch (e) {
-        // Fallback to mailto
-        const subject = encodeURIComponent(`PDRT — ${itemNum}. ${title} — ${name}`);
-        const mailBody = encodeURIComponent(body);
-        window.location.href = `mailto:info@poyntonroundtable.com?subject=${subject}&body=${mailBody}`;
-        btn.disabled = false;
-        btn.textContent = 'Submit';
-    }
+    setTimeout(() => {
+        btn.textContent = 'Resend';
+        btn.classList.remove('sent');
+    }, 2000);
 }
 </script>
 
