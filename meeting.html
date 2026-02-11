@@ -683,7 +683,7 @@
 </div>
 
 <script>
-const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019c4a5c-3094-724a-833a-d7e89b986352';
+const DB_URL = 'https://pdrt-meeting-default-rtdb.europe-west1.firebasedatabase.app';
 
 function toggleItem(header) {
     const item = header.closest('.item');
@@ -733,25 +733,18 @@ async function submitItem(btn) {
     const status = btn.nextElementSibling;
 
     try {
-        // Fetch existing notes
-        const res = await fetch(BLOB_URL);
-        const data = await res.json();
-
-        // Add new note
-        data.notes.push({
-            name: name,
-            item: parseInt(itemNum),
-            title: title,
-            notes: notes,
-            vote: voteVal || null,
-            time: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-        });
-
-        // Save back
-        await fetch(BLOB_URL, {
-            method: 'PUT',
+        // Push new note to Firebase
+        await fetch(`${DB_URL}/notes.json`, {
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
+            body: JSON.stringify({
+                name: name,
+                item: parseInt(itemNum),
+                title: title,
+                notes: notes,
+                vote: voteVal || null,
+                time: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+            })
         });
 
         btn.textContent = 'Sent';
