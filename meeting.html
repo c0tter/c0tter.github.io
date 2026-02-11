@@ -17,7 +17,7 @@
             --text: #e4e6ed;
             --text-muted: #8b90a0;
             --accent: #e8a020;
-            --accent-dim: rgba(232, 160, 32, 0.15);
+            --accent-dim: rgba(232, 160, 32, 0.12);
             --vote: #cc3333;
             --decision: #cc6600;
             --discussion: #3388cc;
@@ -34,47 +34,110 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .container { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+        .container { max-width: 720px; margin: 0 auto; padding: 0 16px; }
 
         /* Header */
         .header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
+            background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+            padding: 32px 0 24px;
+            text-align: center;
         }
-        .header-inner { text-align: center; }
-        .header .logo { color: var(--accent); font-weight: 700; font-size: 14px; letter-spacing: 1px; }
-        .header h1 { font-size: 18px; font-weight: 600; margin-top: 4px; }
-        .header .meta { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+        .header .logo {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .header h1 { font-size: 28px; font-weight: 700; margin-top: 6px; letter-spacing: -0.5px; }
+        .header .date {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+        .header .venue {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
 
-        /* Name input */
-        .name-bar {
-            background: var(--surface);
+        /* Meeting info bar */
+        .info-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 16px 0;
             border-bottom: 1px solid var(--border);
-            padding: 12px 0;
-            position: sticky;
-            top: 74px;
-            z-index: 99;
+            margin-bottom: 20px;
         }
-        .name-bar label { font-size: 13px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px; }
-        .name-bar input {
-            width: 100%;
-            padding: 10px 14px;
-            background: var(--surface2);
+        .info-item {
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 8px;
-            color: var(--text);
-            font-family: inherit;
-            font-size: 15px;
+            padding: 10px 14px;
         }
-        .name-bar input:focus { outline: none; border-color: var(--accent); }
+        .info-item.full { grid-column: 1 / -1; }
+        .info-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-value { font-size: 14px; font-weight: 500; margin-top: 2px; }
+
+        /* Governance notice */
+        .gov-notice {
+            background: var(--accent-dim);
+            border: 1px solid rgba(232, 160, 32, 0.2);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 20px;
+        }
+        .gov-notice h3 {
+            font-size: 13px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .gov-notice ul {
+            font-size: 13px;
+            color: var(--text);
+            margin-left: 16px;
+        }
+        .gov-notice li { margin-bottom: 3px; }
+        .gov-notice li::marker { color: var(--accent); }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            overflow-x: auto;
+            gap: 4px;
+            padding: 12px 0 16px;
+            margin-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .timeline::-webkit-scrollbar { display: none; }
+        .tl-item {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .tl-item:active, .tl-item:hover { border-color: var(--accent); background: var(--accent-dim); }
+        .tl-num { font-weight: 700; font-size: 14px; }
+        .tl-time { font-size: 10px; color: var(--text-muted); display: block; }
+        .tl-badge {
+            display: block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin: 3px auto 0;
+        }
 
         /* Agenda items */
-        .agenda { padding: 16px 0 32px; }
+        .agenda { padding-bottom: 40px; }
 
         .item {
             background: var(--surface);
@@ -136,6 +199,7 @@
         .badge-update { background: rgba(51,170,85,0.2); color: var(--update); }
 
         .item-lead { font-size: 12px; color: var(--text-muted); }
+        .item-time { font-size: 12px; color: var(--text-muted); }
 
         .chevron {
             color: var(--text-muted);
@@ -149,51 +213,128 @@
         .item-body {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.3s ease;
+            transition: max-height 0.4s ease;
         }
-        .item.open .item-body { max-height: 2000px; }
+        .item.open .item-body { max-height: 5000px; }
 
         .item-content { padding: 0 16px 16px; }
 
+        /* Content blocks */
         .context {
             font-size: 13px;
             color: var(--text-muted);
             background: var(--surface2);
-            padding: 10px 12px;
+            padding: 10px 14px;
             border-radius: 8px;
             margin-bottom: 12px;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
-        .talking-points { margin-bottom: 12px; }
-        .talking-points h4 {
+        .block { margin-bottom: 14px; }
+        .block h4 {
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             color: var(--text-muted);
             margin-bottom: 6px;
         }
-        .talking-points li {
+        .block li {
             font-size: 13px;
             margin-left: 16px;
-            margin-bottom: 3px;
-            color: var(--text);
+            margin-bottom: 4px;
+            line-height: 1.5;
         }
-        .talking-points li::marker { color: var(--accent); }
+        .block li::marker { color: var(--accent); }
+        .block li strong { color: var(--text); }
+        .block p { font-size: 13px; line-height: 1.6; }
 
         .chair-q {
             font-size: 13px;
             color: var(--accent);
-            padding: 8px 12px;
+            padding: 10px 14px;
             background: var(--accent-dim);
             border-radius: 8px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border-left: 3px solid var(--accent);
+            line-height: 1.5;
         }
-        .chair-q strong { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .chair-q strong { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
 
-        /* Input areas */
-        .input-group { margin-top: 10px; }
+        /* Governance callouts */
+        .gov-callout {
+            font-size: 12px;
+            color: var(--discussion);
+            background: rgba(51,136,204,0.08);
+            border: 1px solid rgba(51,136,204,0.15);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .gov-callout strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+
+        /* Vote box */
+        .vote-box {
+            background: rgba(204,51,51,0.06);
+            border: 1px solid rgba(204,51,51,0.15);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+        }
+        .vote-box .resolution {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .vote-box .resolution-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+        .vote-box .vote-record {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(204,51,51,0.1);
+        }
+
+        /* Roles table */
+        .roles-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        .roles-table th {
+            text-align: left;
+            padding: 6px 10px;
+            background: var(--surface2);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 10px;
+        }
+        .roles-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .roles-table .role-name { font-weight: 600; color: var(--accent); white-space: nowrap; }
+        .roles-table .trustee-badge {
+            font-size: 9px;
+            background: rgba(204,51,51,0.15);
+            color: var(--vote);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .roles-table .vacant {
+            color: var(--vote);
+            font-weight: 600;
+        }
+        .roles-table .filled { color: var(--success); }
+
+        /* Notes input */
+        .input-group { margin-top: 12px; }
         .input-group label {
             display: block;
             font-size: 12px;
@@ -205,7 +346,7 @@
         }
         .input-group textarea {
             width: 100%;
-            min-height: 60px;
+            min-height: 56px;
             padding: 10px 12px;
             background: var(--bg);
             border: 1px solid var(--border);
@@ -217,34 +358,27 @@
             line-height: 1.5;
         }
         .input-group textarea:focus { outline: none; border-color: var(--accent); }
-        .input-group textarea::placeholder { color: var(--text-muted); opacity: 0.6; }
-
-        /* Per-item submit */
+        .input-group textarea::placeholder { color: var(--text-muted); opacity: 0.5; }
         .item-submit-row {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 8px;
         }
         .btn-item-submit {
-            padding: 10px 20px;
+            padding: 9px 18px;
             background: var(--accent);
             color: #000;
             border: none;
             border-radius: 8px;
             font-family: inherit;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            flex-shrink: 0;
         }
         .btn-item-submit:active { opacity: 0.8; }
-        .btn-item-submit:disabled { opacity: 0.4; cursor: not-allowed; }
-        .btn-item-submit.sent {
-            background: var(--success);
-            color: #fff;
-        }
+        .btn-item-submit.sent { background: var(--success); color: #fff; }
         .item-submit-status {
             font-size: 12px;
             color: var(--success);
@@ -254,440 +388,632 @@
         }
         .item-submit-status.show { opacity: 1; }
 
-        /* Resolution voting */
-        .vote-box {
-            background: rgba(204,51,51,0.08);
-            border: 1px solid rgba(204,51,51,0.2);
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 12px;
-        }
-        .vote-box p { font-size: 13px; font-weight: 600; color: var(--vote); margin-bottom: 8px; }
-        .vote-options { display: flex; gap: 8px; }
-        .vote-options label {
-            flex: 1;
+        /* Divider */
+        .section-divider {
             text-align: center;
-            padding: 8px;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
+            padding: 16px 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .vote-options input { display: none; }
-        .vote-options input:checked + span {
+        .section-divider span {
+            background: var(--bg);
+            padding: 0 12px;
+            position: relative;
+        }
+        .section-divider::before {
+            content: '';
             display: block;
-        }
-        .vote-options label:has(input:checked) {
-            border-color: var(--accent);
-            background: var(--accent-dim);
+            height: 1px;
+            background: var(--border);
+            position: relative;
+            top: 10px;
         }
 
-        /* Scrollbar */
+        /* Footer */
+        .meeting-footer {
+            text-align: center;
+            padding: 24px 0 40px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        @media (max-width: 480px) {
+            .header h1 { font-size: 22px; }
+            .info-bar { grid-template-columns: 1fr; }
+            .roles-table { font-size: 11px; }
+        }
     </style>
 </head>
 <body>
 
+<!-- Header -->
 <div class="header">
-    <div class="container header-inner">
-        <div class="logo">POYNTON &amp; DISTRICT ROUND TABLE 1064</div>
+    <div class="container">
+        <div class="logo">Poynton &amp; District Round Table 1064</div>
         <h1>Business Meeting</h1>
-        <div class="meta">Thursday 12 Feb 2026 &middot; 19:30 &middot; Poynton Legion</div>
+        <div class="date">Thursday 12th February 2026 &middot; 19:30</div>
+        <div class="venue">Poynton Legion Club</div>
     </div>
 </div>
 
-<div class="name-bar">
-    <div class="container">
-        <label for="attendee-name">Your name</label>
-        <input type="text" id="attendee-name" placeholder="e.g. Stephen Cotter" autocomplete="name">
-    </div>
-</div>
+<div class="container">
 
-<div class="agenda">
-    <div class="container">
-        <!-- 1. Welcome -->
-        <div class="item" data-num="1">
+    <!-- Meeting info -->
+    <div class="info-bar">
+        <div class="info-item">
+            <div class="info-label">Chair</div>
+            <div class="info-value">Stephen Cotter</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Minutes</div>
+            <div class="info-value">Tom W</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Apologies</div>
+            <div class="info-value">Jon Fuller (notes sent in advance)</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Est. Duration</div>
+            <div class="info-value">19:30 – 21:15 (~105 mins)</div>
+        </div>
+    </div>
+
+    <!-- Governance reminder -->
+    <div class="gov-notice">
+        <h3>Meeting Governance</h3>
+        <ul>
+            <li><strong>Quorum:</strong> 2 trustees must be present (Chairman, Treasurer, Community Officer are mandatory trustees)</li>
+            <li><strong>Voting:</strong> Active members only. Chair has deciding vote on ties</li>
+            <li><strong>Charter requirement:</strong> Minimum 2 business meetings per year — this is meeting 1</li>
+            <li><strong>Principle:</strong> The club makes decisions; the trustees execute them</li>
+        </ul>
+    </div>
+
+    <!-- Quick nav timeline -->
+    <div class="timeline">
+        <a class="tl-item" href="#item-1"><span class="tl-num">1</span><span class="tl-time">5m</span><span class="tl-badge" style="background:var(--update)"></span></a>
+        <a class="tl-item" href="#item-2"><span class="tl-num">2</span><span class="tl-time">15m</span><span class="tl-badge" style="background:var(--decision)"></span></a>
+        <a class="tl-item" href="#item-3"><span class="tl-num">3</span><span class="tl-time">15m</span><span class="tl-badge" style="background:var(--vote)"></span></a>
+        <a class="tl-item" href="#item-4"><span class="tl-num">4</span><span class="tl-time">15m</span><span class="tl-badge" style="background:var(--discussion)"></span></a>
+        <a class="tl-item" href="#item-5"><span class="tl-num">5</span><span class="tl-time">10m</span><span class="tl-badge" style="background:var(--discussion)"></span></a>
+        <a class="tl-item" href="#item-6"><span class="tl-num">6</span><span class="tl-time">10m</span><span class="tl-badge" style="background:var(--decision)"></span></a>
+        <a class="tl-item" href="#item-7"><span class="tl-num">7</span><span class="tl-time">10m</span><span class="tl-badge" style="background:var(--update)"></span></a>
+        <a class="tl-item" href="#item-8"><span class="tl-num">8</span><span class="tl-time">15m</span><span class="tl-badge" style="background:var(--update)"></span></a>
+        <a class="tl-item" href="#item-9"><span class="tl-num">9</span><span class="tl-time">5m</span><span class="tl-badge" style="background:var(--discussion)"></span></a>
+    </div>
+
+    <!-- Name bar for notes -->
+    <div style="margin-bottom:16px;">
+        <label for="attendee-name" style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Your name (for submitting notes)</label>
+        <input type="text" id="attendee-name" placeholder="e.g. Dan, Matt, Tom..." autocomplete="name" style="width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:15px;outline:none;">
+    </div>
+
+    <!-- AGENDA -->
+    <div class="agenda">
+
+        <!-- ============================================================ -->
+        <!-- 1. WELCOME & APOLOGIES -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-1">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">1</span>
                 <div class="item-info">
-                    <div class="item-title">Welcome & Apologies</div>
+                    <div class="item-title">Welcome &amp; Apologies</div>
                     <div class="item-meta">
                         <span class="badge badge-update">Update</span>
-                        <span class="item-lead">SC &middot; 5 mins</span>
+                        <span class="item-lead">SC</span>
+                        <span class="item-time">5 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="talking-points">
-                        <h4>Key points</h4>
-                        <ul>
-                            <li>Record attendees and confirm quorum (2 trustees present)</li>
-                            <li>Jon Fuller — apologies, notes sent in advance</li>
-                            <li>Introduce Stephen and Jack (new members)</li>
-                        </ul>
-                    </div>
-                    <div class="chair-q">
-                        <strong>Chair to ask:</strong><br>
-                        "Stephen and Jack have attended two events — shall we add them to the main WhatsApp?"
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_1" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="block">
+                    <h4>Housekeeping</h4>
+                    <ul>
+                        <li>Record attendees and confirm <strong>quorum</strong> (2 of 3 trustees present)</li>
+                        <li>Jon Fuller sends apologies — notes circulated in advance</li>
+                        <li>Introduce <strong>Stephen and Jack</strong> as new members</li>
+                    </ul>
+                </div>
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Stephen and Jack have now attended two events — shall we add them to the main WhatsApp group?"
+                </div>
+                <div class="gov-callout">
+                    <strong>Trust deed</strong>
+                    This is an ordinary meeting. Decisions must follow best practice: agenda sent out, attendees recorded, votes documented, resolutions passed, and minutes circulated.
+                </div>
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_1" placeholder="Attendees, apologies..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
-        <!-- 2. Roles -->
-        <div class="item" data-num="2">
+        <!-- ============================================================ -->
+        <!-- 2. ROLES & RESPONSIBILITIES -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-2">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">2</span>
                 <div class="item-info">
-                    <div class="item-title">Roles & Responsibilities</div>
+                    <div class="item-title">Roles &amp; Responsibilities</div>
                     <div class="item-meta">
                         <span class="badge badge-decision">Decision</span>
-                        <span class="item-lead">TW / SC &middot; 15 mins</span>
+                        <span class="item-lead">TW / SC</span>
+                        <span class="item-time">15 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="context">TW has prepared a document covering job roles, charter obligations, and appointment processes. Per the trust deed, the club decides appointments in an ordinary meeting. Incoming chair traditionally picks their team.</div>
-                    <div class="talking-points">
-                        <h4>Roles to fill</h4>
-                        <ul>
-                            <li><strong>Vice Chair</strong> — was this ever formalised? Need a volunteer</li>
-                            <li><strong>Bonfire Officer / DBO</strong> — Jon Fuller stepping up but wants it properly assigned</li>
-                            <li><strong>Programme Officer</strong> — Pete retiring at AGM, is Matt W taking over?</li>
-                            <li>Where do honorary members (e.g. JD) sit in the structure?</li>
-                            <li>How are roles appointed — volunteered, elected, or chair appoints?</li>
-                        </ul>
-                    </div>
-                    <div class="chair-q">
-                        <strong>Chair to ask:</strong><br>
-                        "Shall we establish a refreshed constitution to ratify these decisions?"
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_2" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">TW has prepared a governance document covering job roles, charter obligations, and appointment processes. The trust deed (executed 22 Jan 2008) is the binding legal document.</div>
+
+                <div class="gov-callout">
+                    <strong>Trust deed requirements</strong>
+                    Minimum 3 trustees at all times. Mandatory trustee roles are Chairman, Treasurer, and Community Services Officer — these are automatically appointed as position-linked. Additional trustees require: club discussion, formal nomination, proper voting, official recording, and a deed of appointment. 21 days notice required for trustee appointments.
+                </div>
+
+                <div class="block">
+                    <h4>Current roles &amp; status</h4>
+                </div>
+                <table class="roles-table">
+                    <tr><th>Role</th><th>Holder</th><th>Status</th></tr>
+                    <tr><td class="role-name">Chairman <span class="trustee-badge">Trustee</span></td><td>Stephen Cotter</td><td class="filled">Filled</td></tr>
+                    <tr><td class="role-name">Treasurer <span class="trustee-badge">Trustee</span></td><td>Tom W</td><td class="filled">Filled</td></tr>
+                    <tr><td class="role-name">Community Officer <span class="trustee-badge">Trustee</span></td><td>JD</td><td class="filled">Filled</td></tr>
+                    <tr><td class="role-name">Vice Chair</td><td>—</td><td class="vacant">Vacant</td></tr>
+                    <tr><td class="role-name">Programme Officer</td><td>Pete (retiring at AGM)</td><td class="vacant">Succession needed</td></tr>
+                    <tr><td class="role-name">Bonfire Officer / DBO</td><td>Jon Fuller (informal)</td><td class="vacant">Needs formalising</td></tr>
+                    <tr><td class="role-name">Santa Officer</td><td>Matt Anthony</td><td class="filled">Filled</td></tr>
+                    <tr><td class="role-name">Marketing Officer</td><td>Dan</td><td class="filled">Filled</td></tr>
+                </table>
+
+                <div class="block">
+                    <h4>Key questions</h4>
+                    <ul>
+                        <li><strong>Vice Chair</strong> — was this ever formalised? Traditionally succeeds the chair and organises chairman's weekend</li>
+                        <li><strong>Bonfire Officer</strong> — Jon Fuller has been stepping up but wants it properly assigned. This is a one-year term with a deputy to ensure smooth handover</li>
+                        <li><strong>Programme Officer</strong> — Pete retiring at AGM. Is Matt W willing to take over? This role is critical for recruiting new members through vibrant activities</li>
+                        <li><strong>Honorary members</strong> (e.g. JD) — per the handbook, honorary members do not hold office or vote unless otherwise requested, but are valued as mentors</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Role appointment process</h4>
+                    <p>Historically, the incoming chair picks their team (including vice chair) each year. Some roles are harder to hand over — the treasurer typically does a 3-4 year stint. Skill-based roles (Treasurer, Community Officer, Marketing) may be held longer, with the current holder responsible for identifying and mentoring a successor.</p>
+                </div>
+
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "How do we want to appoint roles going forward — volunteered, elected, or appointed by the chair?"
+                </div>
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Shall we establish a refreshed constitution to ratify these decisions and document how the club operates going forward?"
+                </div>
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_2" placeholder="Role decisions, nominations..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
-        <!-- 3. Financial Year -->
-        <div class="item" data-num="3">
+        <!-- ============================================================ -->
+        <!-- 3. SHORT FINANCIAL YEAR -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-3">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">3</span>
                 <div class="item-info">
                     <div class="item-title">Short Financial Year</div>
                     <div class="item-meta">
-                        <span class="badge badge-vote">Vote</span>
-                        <span class="item-lead">TW &middot; 15 mins</span>
+                        <span class="badge badge-vote">Vote Required</span>
+                        <span class="item-lead">TW</span>
+                        <span class="item-time">15 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="context">Current year runs May–April. Bonfire and Santa income falls across two periods. TW proposes a short period (May–Dec 2025) then switching to calendar year (Jan–Dec) going forward. Accounts are ready.</div>
-                    <div class="talking-points">
-                        <h4>Benefits</h4>
-                        <ul>
-                            <li>Full year's income known after bonfire and Santa</li>
-                            <li>Donations can be planned with clarity</li>
-                            <li>AGM reports on fresh, relevant figures</li>
-                            <li>Frees up April for trustee updates and bank mandate</li>
-                        </ul>
-                    </div>
-                    <div class="vote-box">
-                        <p>Resolution: Switch to calendar year accounting</p>
-                        <div class="vote-options">
-                            <label><input type="radio" name="vote_3" value="For"><span>For</span></label>
-                            <label><input type="radio" name="vote_3" value="Against"><span>Against</span></label>
-                            <label><input type="radio" name="vote_3" value="Abstain"><span>Abstain</span></label>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_3" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">
+                    <strong>The problem:</strong> The current accounting year runs May–April. This means the AGM (held in April/May) reports on figures that feel like last year's news. Bonfire (November) and Santa (December) income falls across two accounting periods, making donation planning unclear.
+                </div>
+
+                <div class="block">
+                    <h4>Proposed change</h4>
+                    <ul>
+                        <li>Run a <strong>short accounting period: May–December 2025</strong></li>
+                        <li>Switch to <strong>calendar year reporting (Jan–Dec)</strong> going forward</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Benefits</h4>
+                    <ul>
+                        <li>After bonfire and Santa, the full year's income is known</li>
+                        <li>Donations for the coming year can be planned with clarity</li>
+                        <li>AGM reports on fresh, relevant figures</li>
+                        <li>Frees up April for trustee updates and bank mandate work</li>
+                    </ul>
+                </div>
+
+                <div class="gov-callout">
+                    <strong>Trust deed compliance</strong>
+                    Trustees must comply with the Charities Act 1993 regarding: keeping accounting records, preparing annual statements, auditing/independent examination, and transmitting accounts to the Charity Commission. TW confirms accounts are up to date and ready.
+                </div>
+
+                <div class="vote-box">
+                    <div class="resolution">Resolution #1</div>
+                    <div class="resolution-text">To approve a short accounting period (May–December 2025) and switch to calendar year reporting from January 2026 onwards.</div>
+                    <div class="vote-record">FOR ___ &nbsp; AGAINST ___ &nbsp; ABSTAIN ___ &nbsp; RESULT ___</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_3" placeholder="Notes on the financial year proposal..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
-        <!-- 4. Donations -->
-        <div class="item" data-num="4">
+        <!-- ============================================================ -->
+        <!-- 4. CHARITY & DONATIONS -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-4">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">4</span>
                 <div class="item-info">
-                    <div class="item-title">Charity & Donations Plan</div>
+                    <div class="item-title">Charity &amp; Donations Plan</div>
                     <div class="item-meta">
                         <span class="badge badge-discussion">Discussion</span>
-                        <span class="item-lead">JD / TW &middot; 15 mins</span>
+                        <span class="item-lead">JD / TW</span>
+                        <span class="item-time">15 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="context">Per trust deed: charity funds must only be used for charitable purposes. The club decides where grants go in an ordinary meeting.</div>
-                    <div class="talking-points">
-                        <h4>Key questions</h4>
-                        <ul>
-                            <li>What is the plan for this year's donations?</li>
-                            <li>Any incoming grant requests to review?</li>
-                            <li>If the short financial year passes, how does the 2026 timeline look?</li>
-                        </ul>
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_4" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="gov-callout">
+                    <strong>Trust deed — charitable funds</strong>
+                    The charity account is established exclusively for charitable purposes according to the laws of England and Wales. Money from the charity must only be used for that purpose. The <strong>club</strong> (not the trustees) decides where grants are awarded in an ordinary meeting. Trustees can only refuse in exceptional circumstances (e.g. illegal or doesn't meet charitable causes).
+                </div>
+
+                <div class="block">
+                    <h4>Discussion points</h4>
+                    <ul>
+                        <li>What is the <strong>donations plan for 2026</strong>?</li>
+                        <li>Any incoming <strong>grant requests</strong> to review?</li>
+                        <li>If the short financial year passes, the full picture of bonfire + Santa income will be clear — how does the 2026 donations timeline look?</li>
+                        <li>Community Officer (JD) to present any requests received</li>
+                    </ul>
+                </div>
+
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "JD — can you outline any grant requests received and proposed donation amounts for the club to consider?"
+                </div>
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_4" placeholder="Grant requests, donation proposals..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
-        <!-- 5. Bonfire -->
-        <div class="item" data-num="5">
+        <div class="section-divider"><span>Operational Items</span></div>
+
+        <!-- ============================================================ -->
+        <!-- 5. BONFIRE 2026 -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-5">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">5</span>
                 <div class="item-info">
                     <div class="item-title">Bonfire 2026</div>
                     <div class="item-meta">
                         <span class="badge badge-discussion">Discussion</span>
-                        <span class="item-lead">Jon's notes / All &middot; 10 mins</span>
+                        <span class="item-lead">Jon's notes / All</span>
+                        <span class="item-time">10 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="context">Jon Fuller can't attend — notes sent in advance. Bonfire is the main charity event.</div>
-                    <div class="talking-points">
-                        <h4>Fireworks (Will)</h4>
-                        <ul>
-                            <li>Keeping the price the same?</li>
-                            <li>Push on hitting timings</li>
-                            <li>Moving spectator line — impact on the show?</li>
-                            <li>Jon wants to speak to Will directly as DBO</li>
-                        </ul>
-                        <h4 style="margin-top:10px">Other</h4>
-                        <ul>
-                            <li>Formalising DBO role (see item 2)</li>
-                            <li>Drone photographer agreed to shoot bonfire</li>
-                            <li>Gallaways can do new banners</li>
-                        </ul>
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_5" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">The bonfire is our main charity fundraising event and one of the four constitutional pillars of the club. Jon Fuller can't attend but has sent notes. The Bonfire Officer project-manages the event — everyone pulls their weight, but the BO holds people accountable and assigns roles.</div>
+
+                <div class="block">
+                    <h4>Fireworks (Will)</h4>
+                    <ul>
+                        <li>Are we keeping the <strong>price the same</strong>?</li>
+                        <li>Push on <strong>hitting timings</strong></li>
+                        <li>Moving the <strong>spectator line</strong> — what impact on the show?</li>
+                        <li>Jon wants to speak to Will directly as DBO for continuity</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Logistics &amp; media</h4>
+                    <ul>
+                        <li><strong>DBO role:</strong> needs formalising — links back to item 2</li>
+                        <li><strong>Drone photographer:</strong> local photographer has agreed to shoot the bonfire (via Dan)</li>
+                        <li><strong>Banners:</strong> Gallaways can facilitate new banners</li>
+                    </ul>
+                </div>
+
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Read out Jon's key points. Do we agree on fireworks pricing? Who is coordinating with Will?"
+                </div>
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_5" placeholder="Bonfire decisions, fireworks..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
-        <!-- 6. Santa -->
-        <div class="item" data-num="6">
+        <!-- ============================================================ -->
+        <!-- 6. SANTA DEBRIEF -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-6">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">6</span>
                 <div class="item-info">
-                    <div class="item-title">Santa Debrief & Driver Policy</div>
+                    <div class="item-title">Santa Debrief &amp; Driver Policy</div>
                     <div class="item-meta">
                         <span class="badge badge-decision">Decision</span>
-                        <span class="item-lead">Matt A / SC &middot; 10 mins</span>
+                        <span class="item-lead">Matt A / SC</span>
+                        <span class="item-time">10 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="talking-points">
-                        <h4>Key points</h4>
-                        <ul>
-                            <li>Well done Matt and all — strong public feedback</li>
-                            <li><strong>Driver expenses:</strong> Matt invited drivers, no promises on food/drink — what's the policy?</li>
-                            <li><strong>Men in Sheds refurb:</strong> float/sleigh maintenance update</li>
-                        </ul>
-                    </div>
-                    <div class="chair-q">
-                        <strong>Chair to ask:</strong><br>
-                        "Do we agree a driver expenses policy, or keep it voluntary with no commitment?"
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_6" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">Positive public feedback this year. The Santa Officer project-manages the rounds with support from previous officers. A decision is needed on the driver expenses policy to avoid ambiguity in future years.</div>
+
+                <div class="block">
+                    <h4>Debrief</h4>
+                    <ul>
+                        <li>Well done to Matt and all involved — strong community feedback</li>
+                        <li><strong>Men in Sheds refurb</strong> — update on float/sleigh maintenance and condition</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Driver expenses — decision needed</h4>
+                    <ul>
+                        <li>Matt invited drivers but made <strong>no promises on food/drink</strong></li>
+                        <li>Need a clear, documented policy going forward</li>
+                        <li>Options: set expenses amount, voluntary with no commitment, or case-by-case</li>
+                    </ul>
+                </div>
+
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Do we agree to a formal driver expenses policy? What should it be?"
+                </div>
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_6" placeholder="Driver policy decision, refurb update..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
-        <!-- 7. Programme -->
-        <div class="item" data-num="7">
+        <!-- ============================================================ -->
+        <!-- 7. PROGRAMME UPDATE -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-7">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">7</span>
                 <div class="item-info">
                     <div class="item-title">Programme Update</div>
                     <div class="item-meta">
                         <span class="badge badge-update">Update</span>
-                        <span class="item-lead">Pete / Dan &middot; 10 mins</span>
+                        <span class="item-lead">Pete / Dan</span>
+                        <span class="item-time">10 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="talking-points">
-                        <h4>Proposed 2026 programme</h4>
-                        <ul>
-                            <li>Bolly Bikes</li>
-                            <li>Bolly Boats</li>
-                            <li>Mac Beer Fest</li>
-                            <li>BBQ — lockup clean-up</li>
-                            <li>World Cup</li>
-                            <li>Buggy Racing</li>
-                        </ul>
-                    </div>
-                    <div class="chair-q">
-                        <strong>Chair to ask:</strong><br>
-                        "Weekday events local, boozy ones on Friday — agreed? Is the monthly event + social night cadence working?"
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_7" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">The programme is key to what differentiates Round Table from groups like Rotary. Vibrant, youthful activities are critical for recruiting new members. While all members contribute to the programme, the Programme Officer coordinates planning. Pete is retiring at AGM — succession needs confirming (see item 2).</div>
+
+                <div class="block">
+                    <h4>Proposed 2026 events</h4>
+                    <ul>
+                        <li>Bolly Bikes</li>
+                        <li>Bolly Boats</li>
+                        <li>Mac Beer Fest</li>
+                        <li>BBQ — lockup clean-up</li>
+                        <li>World Cup</li>
+                        <li>Buggy Racing</li>
+                    </ul>
+                </div>
+
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Can we confirm: weekday events are local, boozy ones on a Friday?"
+                </div>
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Is the monthly event + social night cadence still working for everyone?"
+                </div>
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_7" placeholder="Event ideas, scheduling..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
-        <!-- 8. Marketing -->
-        <div class="item" data-num="8">
+        <!-- ============================================================ -->
+        <!-- 8. MARKETING UPDATE -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-8">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">8</span>
                 <div class="item-info">
                     <div class="item-title">Marketing Update</div>
                     <div class="item-meta">
                         <span class="badge badge-update">Update</span>
-                        <span class="item-lead">Dan / SC &middot; 15 mins</span>
+                        <span class="item-lead">Dan / SC</span>
+                        <span class="item-time">15 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="talking-points">
-                        <h4>Recruitment</h4>
-                        <ul>
-                            <li>Quarterly social media push</li>
-                            <li>Flyers on 8 community boards (re-supply each Jan)</li>
-                            <li>Posters in pubs: F&amp;F, Vinehop, Farmers, Cask, Acoustic Lounge</li>
-                            <li>Need to ask at Legion / Workies / Sports Club</li>
-                        </ul>
-                        <h4 style="margin-top:10px">Website</h4>
-                        <ul>
-                            <li>New WordPress site in production — hosting £15/month, build free</li>
-                            <li>Launch target: AGM</li>
-                            <li>Ticket platform integration to explore</li>
-                        </ul>
-                        <h4 style="margin-top:10px">Other</h4>
-                        <ul>
-                            <li>Gallaways doing flyers/posters FOC + new bonfire banners</li>
-                            <li>Drone photographer for bonfire confirmed</li>
-                            <li>Council contact — potential partnership</li>
-                            <li>RT Handbook for new members — Dan started, needs Tom</li>
-                        </ul>
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_8" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">The Marketing Officer promotes the club through three key areas: programme advertising for new members, event promotion (Santa &amp; bonfire), and donation request outreach. Recruitment remains a stated priority. Dan is presenting proposals that need council input.</div>
+
+                <div class="block">
+                    <h4>Recruitment campaign</h4>
+                    <ul>
+                        <li>Big <strong>social media push each quarter</strong></li>
+                        <li>Flyers on <strong>8 community boards</strong> (re-supply each January)</li>
+                        <li>Posters in pubs: <strong>F&amp;F, Vinehop, Farmers, Cask, Acoustic Lounge</strong></li>
+                        <li>Need to ask at <strong>Legion, Workies, Sports Club</strong></li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Website</h4>
+                    <ul>
+                        <li>New responsive <strong>WordPress site</strong> in production (all plugins included)</li>
+                        <li>Hosting <strong>£15/month</strong>, build free</li>
+                        <li>Structure and content prepared — Dan happy to share</li>
+                        <li>Launch target: <strong>AGM</strong></li>
+                        <li>Ongoing blog plan to follow</li>
+                        <li>Ticket platform integration to be explored</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Print &amp; media</h4>
+                    <ul>
+                        <li><strong>Gallaways</strong> produced flyers/posters FOC — can do new bonfire banners</li>
+                        <li>Local <strong>drone photographer</strong> agreed to shoot the bonfire</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Other initiatives</h4>
+                    <ul>
+                        <li><strong>Council contact</strong> — lady said we could chat about things we can help with or get involved in</li>
+                        <li>More <strong>information flow</strong> needed to maximise social media opportunities</li>
+                        <li><strong>Round Table handbook</strong> — class of '25 and newbies in '26 should have a document outlining the club. Dan has started, can work with Tom on details</li>
+                    </ul>
+                </div>
+
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Does the £15/month hosting need a vote or is it within discretionary spend?"
+                </div>
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Who is owning the council relationship? Who chases the pub poster placements?"
+                </div>
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_8" placeholder="Marketing actions, owners..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
+        <div class="section-divider"><span>Close</span></div>
+
+        <!-- ============================================================ -->
         <!-- 9. AOB -->
-        <div class="item" data-num="9">
+        <!-- ============================================================ -->
+        <div class="item" id="item-9">
             <div class="item-header" onclick="toggleItem(this)">
                 <span class="item-num">9</span>
                 <div class="item-info">
-                    <div class="item-title">AOB & Next Meeting</div>
+                    <div class="item-title">AOB &amp; Date of Next Meeting</div>
                     <div class="item-meta">
                         <span class="badge badge-discussion">Discussion</span>
-                        <span class="item-lead">All &middot; 5 mins</span>
+                        <span class="item-lead">All</span>
+                        <span class="item-time">5 mins</span>
                     </div>
                 </div>
                 <span class="chevron">&#9662;</span>
             </div>
-            <div class="item-body">
-                <div class="item-content">
-                    <div class="talking-points">
-                        <h4>Key points</h4>
-                        <ul>
-                            <li>This is business meeting 1 of 2 required by charter</li>
-                            <li>AGM timing — April/May 2026?</li>
-                            <li>Any other business</li>
-                        </ul>
-                    </div>
-                    <div class="input-group">
-                        <label>Your notes / actions</label>
-                        <textarea data-item="item_9" placeholder="Any notes on this item..."></textarea>
-                        <div class="item-submit-row">
-                            <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
-                            <span class="item-submit-status">Sent</span>
-                        </div>
+            <div class="item-body"><div class="item-content">
+                <div class="block">
+                    <h4>Standing items</h4>
+                    <ul>
+                        <li>This is business meeting <strong>1 of 2</strong> required by the charter</li>
+                        <li><strong>AGM timing</strong> — April/May 2026? Need a date to give 21 days notice for any trustee changes</li>
+                        <li>2 new members (Stephen and Jack) — onboarding next steps</li>
+                    </ul>
+                </div>
+                <div class="chair-q">
+                    <strong>Chair to ask</strong>
+                    "Can we agree a date for the AGM now?"
+                </div>
+                <div class="block">
+                    <h4>Any other business</h4>
+                    <ul>
+                        <li>Open floor</li>
+                    </ul>
+                </div>
+                <div class="input-group">
+                    <label>Your notes</label>
+                    <textarea data-item="item_9" placeholder="AOB, AGM date..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit</button>
+                        <span class="item-submit-status">Sent</span>
                     </div>
                 </div>
-            </div>
+            </div></div>
         </div>
 
+    </div><!-- /agenda -->
+
+    <div class="meeting-footer">
+        Meeting closes — target 21:15<br>
+        Poynton &amp; District Round Table 1064 &middot; Est. 1972 &middot; Registered Charity
     </div>
-</div>
+
+</div><!-- /container -->
 
 <script>
-const DB_URL = 'https://pdrt-meeting-default-rtdb.europe-west1.firebasedatabase.app';
-
 function toggleItem(header) {
-    const item = header.closest('.item');
-    item.classList.toggle('open');
+    header.closest('.item').classList.toggle('open');
 }
 
 const itemTitles = {
@@ -702,12 +1028,14 @@ const itemTitles = {
     item_9: 'AOB & Next Meeting',
 };
 
-async function submitItem(btn) {
+function submitItem(btn) {
     const name = document.getElementById('attendee-name').value.trim();
     if (!name) {
-        document.getElementById('attendee-name').focus();
-        document.getElementById('attendee-name').style.borderColor = 'var(--vote)';
+        const input = document.getElementById('attendee-name');
+        input.focus();
+        input.style.borderColor = 'var(--vote)';
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => input.style.borderColor = '', 2000);
         return;
     }
 
@@ -715,58 +1043,32 @@ async function submitItem(btn) {
     const textarea = itemContent.querySelector('textarea');
     const itemKey = textarea.getAttribute('data-item');
     const itemNum = itemKey.replace('item_', '');
-    const title = itemTitles[itemKey] || `Item ${itemNum}`;
+    const title = itemTitles[itemKey] || 'Item ' + itemNum;
     const notes = textarea.value.trim();
 
-    const vote = itemContent.querySelector(`input[name="vote_${itemNum}"]:checked`);
-    const voteVal = vote ? vote.value : '';
-
-    if (!notes && !voteVal) {
+    if (!notes) {
         textarea.focus();
         textarea.style.borderColor = 'var(--vote)';
         setTimeout(() => textarea.style.borderColor = '', 2000);
         return;
     }
 
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
+    const subject = encodeURIComponent('PDRT — ' + itemNum + '. ' + title + ' — ' + name);
+    const body = encodeURIComponent('Meeting note from ' + name + '\n\n' + itemNum + '. ' + title + '\n' + notes + '\n');
+
+    const a = document.createElement('a');
+    a.href = 'mailto:info@poyntonroundtable.com?subject=' + subject + '&body=' + body;
+    a.target = '_blank';
+    a.click();
+
     const status = btn.nextElementSibling;
-
-    try {
-        // Push new note to Firebase
-        await fetch(`${DB_URL}/notes.json`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: name,
-                item: parseInt(itemNum),
-                title: title,
-                notes: notes,
-                vote: voteVal || null,
-                time: new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-            })
-        });
-
-        btn.textContent = 'Sent';
-        btn.classList.add('sent');
-        status.classList.add('show');
-
-        setTimeout(() => {
-            btn.disabled = false;
-            btn.textContent = 'Update';
-            btn.classList.remove('sent');
-        }, 2000);
-
-    } catch (e) {
-        // Fallback: still show as sent locally
-        btn.textContent = 'Saved locally';
-        btn.classList.add('sent');
-        setTimeout(() => {
-            btn.disabled = false;
-            btn.textContent = 'Retry';
-            btn.classList.remove('sent');
-        }, 2000);
-    }
+    btn.textContent = 'Sent';
+    btn.classList.add('sent');
+    status.classList.add('show');
+    setTimeout(() => {
+        btn.textContent = 'Resend';
+        btn.classList.remove('sent');
+    }, 2000);
 }
 </script>
 
