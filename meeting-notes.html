@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>PDRT 1064 — Meeting Notes (Live)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #242836;
+            --border: #2e3345;
+            --text: #e4e6ed;
+            --text-muted: #8b90a0;
+            --accent: #e8a020;
+            --accent-dim: rgba(232, 160, 32, 0.15);
+            --vote: #cc3333;
+            --decision: #cc6600;
+            --discussion: #3388cc;
+            --update: #33aa55;
+            --success: #22c55e;
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 0 16px; }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left { text-align: left; }
+        .header .logo { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: 1px; }
+        .header h1 { font-size: 18px; font-weight: 600; margin-top: 2px; }
+        .header .meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--success);
+            background: rgba(34, 197, 94, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+        .stat {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .stat strong { color: var(--accent); }
+
+        /* Item sections */
+        .notes-section {
+            margin-bottom: 20px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+        .section-num {
+            background: var(--surface2);
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 12px;
+            min-width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+        .section-title { font-weight: 600; font-size: 15px; }
+        .section-count {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--surface2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Note cards */
+        .note-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .note-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .note-author {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--accent);
+        }
+        .note-time {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .note-body {
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .note-vote {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 4px;
+            margin-top: 6px;
+        }
+        .vote-for { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .vote-against { background: rgba(204, 51, 51, 0.15); color: var(--vote); }
+        .vote-abstain { background: rgba(139, 144, 160, 0.15); color: var(--text-muted); }
+
+        .empty-section {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 8px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .empty-state h2 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
+        .empty-state p { font-size: 14px; }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="container header-inner">
+        <div class="header-left">
+            <div class="logo">PDRT 1064</div>
+            <h1>Meeting Notes</h1>
+            <div class="meta">12 Feb 2026 &middot; Auto-refreshes every 5s</div>
+        </div>
+        <div class="live-badge">
+            <span class="live-dot"></span>
+            LIVE
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="stats-bar">
+        <div class="stat"><strong id="total-notes">0</strong> notes</div>
+        <div class="stat"><strong id="total-people">0</strong> contributors</div>
+        <div class="stat">Last update: <strong id="last-update">—</strong></div>
+    </div>
+
+    <div id="notes-container">
+        <div class="empty-state">
+            <h2>Waiting for notes...</h2>
+            <p>Notes will appear here as people submit them from the meeting page.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const BLOB_URL = 'https://jsonblob.com/api/jsonBlob/019c4a5c-3094-724a-833a-d7e89b986352';
+
+const itemTitles = {
+    1: 'Welcome & Apologies',
+    2: 'Roles & Responsibilities',
+    3: 'Short Financial Year',
+    4: 'Charity & Donations Plan',
+    5: 'Bonfire 2026',
+    6: 'Santa Debrief & Driver Policy',
+    7: 'Programme Update',
+    8: 'Marketing Update',
+    9: 'AOB & Next Meeting',
+};
+
+let lastNoteCount = 0;
+
+async function fetchNotes() {
+    try {
+        const res = await fetch(BLOB_URL);
+        const data = await res.json();
+        renderNotes(data.notes || []);
+    } catch (e) {
+        // silently retry next cycle
+    }
+}
+
+function renderNotes(notes) {
+    const container = document.getElementById('notes-container');
+
+    if (notes.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <h2>Waiting for notes...</h2>
+                <p>Notes will appear here as people submit them from the meeting page.</p>
+            </div>`;
+        return;
+    }
+
+    // Update stats
+    document.getElementById('total-notes').textContent = notes.length;
+    const people = new Set(notes.map(n => n.name));
+    document.getElementById('total-people').textContent = people.size;
+    document.getElementById('last-update').textContent = notes[notes.length - 1].time || '—';
+
+    // Group notes by item
+    const grouped = {};
+    for (let i = 1; i <= 9; i++) grouped[i] = [];
+    notes.forEach(note => {
+        if (grouped[note.item]) grouped[note.item].push(note);
+    });
+
+    let html = '';
+
+    for (let i = 1; i <= 9; i++) {
+        const itemNotes = grouped[i];
+        if (itemNotes.length === 0) continue;
+
+        html += `
+            <div class="notes-section">
+                <div class="section-header">
+                    <span class="section-num">${i}</span>
+                    <span class="section-title">${itemTitles[i]}</span>
+                    <span class="section-count">${itemNotes.length} note${itemNotes.length !== 1 ? 's' : ''}</span>
+                </div>`;
+
+        itemNotes.forEach(note => {
+            let voteHtml = '';
+            if (note.vote) {
+                const voteClass = note.vote === 'For' ? 'vote-for' : note.vote === 'Against' ? 'vote-against' : 'vote-abstain';
+                voteHtml = `<div class="note-vote ${voteClass}">${note.vote}</div>`;
+            }
+
+            html += `
+                <div class="note-card">
+                    <div class="note-header">
+                        <span class="note-author">${escapeHtml(note.name)}</span>
+                        <span class="note-time">${note.time || ''}</span>
+                    </div>
+                    ${note.notes ? `<div class="note-body">${escapeHtml(note.notes)}</div>` : ''}
+                    ${voteHtml}
+                </div>`;
+        });
+
+        html += '</div>';
+    }
+
+    container.innerHTML = html;
+
+    // Scroll to bottom if new notes arrived
+    if (notes.length > lastNoteCount && lastNoteCount > 0) {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+    lastNoteCount = notes.length;
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Initial fetch + poll every 5 seconds
+fetchNotes();
+setInterval(fetchNotes, 5000);
+</script>
+
+</body>
+</html>
