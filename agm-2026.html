@@ -1,0 +1,1417 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>PDRT 1064 — AGM 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0f1117;
+            --surface: #1a1d27;
+            --surface2: #242836;
+            --border: #2e3345;
+            --text: #e4e6ed;
+            --text-muted: #8b90a0;
+            --accent: #e8a020;
+            --accent-dim: rgba(232, 160, 32, 0.12);
+            --vote: #cc3333;
+            --decision: #cc6600;
+            --discussion: #3388cc;
+            --update: #33aa55;
+            --success: #22c55e;
+            --gold: #f5c842;
+            --gold-dim: rgba(245, 200, 66, 0.1);
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, #1a1510 0%, var(--bg) 100%);
+            padding: 40px 0 28px;
+            text-align: center;
+            border-bottom: 1px solid rgba(232,160,32,0.15);
+        }
+        .header .logo {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 10px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .header .year-badge {
+            display: inline-block;
+            background: var(--accent-dim);
+            border: 1px solid rgba(232,160,32,0.3);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 12px;
+            border-radius: 20px;
+            margin-top: 10px;
+        }
+        .header .date {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 10px;
+        }
+        .header .venue {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .header .tagline {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 16px;
+            max-width: 480px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        .header .tagline strong { color: var(--text); }
+
+        /* Stats bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            padding: 20px 0;
+        }
+        .stat {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 10px;
+            text-align: center;
+        }
+        .stat.highlight {
+            border-color: rgba(232,160,32,0.3);
+            background: var(--accent-dim);
+        }
+        .stat-val {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1;
+        }
+        .stat.highlight .stat-val { color: var(--gold); }
+        .stat-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+            line-height: 1.3;
+        }
+
+        /* Meeting info bar */
+        .info-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            padding: 4px 0 16px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .info-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+        .info-item.full { grid-column: 1 / -1; }
+        .info-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-value { font-size: 14px; font-weight: 500; margin-top: 2px; }
+
+        /* Governance notice */
+        .gov-notice {
+            background: var(--accent-dim);
+            border: 1px solid rgba(232, 160, 32, 0.2);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            margin-bottom: 20px;
+        }
+        .gov-notice h3 {
+            font-size: 13px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .gov-notice ul {
+            font-size: 13px;
+            color: var(--text);
+            margin-left: 16px;
+        }
+        .gov-notice li { margin-bottom: 3px; }
+        .gov-notice li::marker { color: var(--accent); }
+
+        /* Handover banner */
+        .handover-banner {
+            background: linear-gradient(135deg, rgba(232,160,32,0.08) 0%, rgba(245,200,66,0.06) 100%);
+            border: 1px solid rgba(232,160,32,0.25);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .handover-icon { font-size: 28px; flex-shrink: 0; }
+        .handover-text h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 3px;
+        }
+        .handover-text p { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+        .handover-arrow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+        .handover-from { color: var(--text-muted); }
+        .handover-sep { color: var(--accent); }
+        .handover-to { color: var(--accent); }
+
+        /* Timeline */
+        .timeline {
+            display: flex;
+            overflow-x: auto;
+            gap: 4px;
+            padding: 12px 0 16px;
+            margin-bottom: 8px;
+            -webkit-overflow-scrolling: touch;
+        }
+        .timeline::-webkit-scrollbar { display: none; }
+        .tl-item {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .tl-item:hover { border-color: var(--accent); background: var(--accent-dim); }
+        .tl-num { font-weight: 700; font-size: 14px; }
+        .tl-time { font-size: 10px; color: var(--text-muted); display: block; }
+        .tl-badge { display: block; width: 6px; height: 6px; border-radius: 50%; margin: 3px auto 0; }
+
+        /* Agenda items */
+        .agenda { padding-bottom: 40px; }
+
+        .item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .item:focus-within { border-color: var(--accent); }
+
+        .item-header {
+            padding: 14px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .item-header:active { background: var(--surface2); }
+
+        .item-num {
+            background: var(--surface2);
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 12px;
+            min-width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .item-info { flex: 1; }
+        .item-title { font-weight: 600; font-size: 15px; line-height: 1.3; }
+
+        .item-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .badge-vote { background: rgba(204,51,51,0.2); color: var(--vote); }
+        .badge-decision { background: rgba(204,102,0,0.2); color: var(--decision); }
+        .badge-discussion { background: rgba(51,136,204,0.2); color: var(--discussion); }
+        .badge-update { background: rgba(51,170,85,0.2); color: var(--update); }
+        .badge-celebration { background: rgba(245,200,66,0.15); color: var(--gold); }
+        .badge-handover { background: rgba(232,160,32,0.15); color: var(--accent); }
+
+        .item-lead { font-size: 12px; color: var(--text-muted); }
+        .item-time { font-size: 12px; color: var(--text-muted); }
+
+        .chevron {
+            color: var(--text-muted);
+            font-size: 18px;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+            margin-top: 4px;
+        }
+        .item.open .chevron { transform: rotate(180deg); }
+
+        .item-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .item.open .item-body { max-height: 6000px; }
+
+        .item-content { padding: 0 16px 16px; }
+
+        /* Content blocks */
+        .context {
+            font-size: 13px;
+            color: var(--text-muted);
+            background: var(--surface2);
+            padding: 10px 14px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .block { margin-bottom: 14px; }
+        .block h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .block li {
+            font-size: 13px;
+            margin-left: 16px;
+            margin-bottom: 4px;
+            line-height: 1.5;
+        }
+        .block li::marker { color: var(--accent); }
+        .block li strong { color: var(--text); }
+        .block p { font-size: 13px; line-height: 1.6; }
+
+        .chair-q {
+            font-size: 13px;
+            color: var(--accent);
+            padding: 10px 14px;
+            background: var(--accent-dim);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent);
+            line-height: 1.5;
+        }
+        .chair-q strong { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 3px; }
+
+        /* Achievement card */
+        .achievement-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 8px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .achievement-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+        .achievement-body { flex: 1; }
+        .achievement-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+        .achievement-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+        /* Finance rows */
+        .finance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .finance-row.total {
+            background: var(--accent-dim);
+            border: 1px solid rgba(232,160,32,0.2);
+            font-weight: 700;
+        }
+        .finance-row.sub { background: var(--surface2); }
+        .finance-row .f-label { color: var(--text); }
+        .finance-row .f-val { font-weight: 600; color: var(--accent); }
+        .finance-row.total .f-val { color: var(--gold); }
+        .finance-row .f-note { font-size: 11px; color: var(--text-muted); }
+
+        /* Donation list */
+        .donation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: var(--surface2);
+            margin-bottom: 4px;
+            gap: 8px;
+        }
+        .donation-item .d-name { font-size: 13px; font-weight: 500; flex: 1; }
+        .donation-item .d-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+        .donation-item .d-amount { font-size: 14px; font-weight: 700; color: var(--success); flex-shrink: 0; }
+
+        /* Governance callout */
+        .gov-callout {
+            font-size: 12px;
+            color: var(--discussion);
+            background: rgba(51,136,204,0.08);
+            border: 1px solid rgba(51,136,204,0.15);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .gov-callout strong { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+
+        /* Vote box */
+        .vote-box {
+            background: rgba(204,51,51,0.06);
+            border: 1px solid rgba(204,51,51,0.15);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 12px;
+        }
+        .vote-box .resolution { font-size: 13px; font-weight: 700; color: var(--vote); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .vote-box .resolution-text { font-size: 13px; color: var(--text); line-height: 1.5; margin-bottom: 8px; }
+        .vote-box .vote-record { font-size: 12px; color: var(--text-muted); padding-top: 8px; border-top: 1px solid rgba(204,51,51,0.1); }
+
+        /* Roles table */
+        .roles-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+        .roles-table th {
+            text-align: left;
+            padding: 6px 10px;
+            background: var(--surface2);
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 10px;
+        }
+        .roles-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .roles-table tr:last-child td { border-bottom: none; }
+        .role-name { font-weight: 600; }
+        .trustee-badge {
+            font-size: 9px;
+            background: rgba(204,51,51,0.15);
+            color: var(--vote);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .incoming-badge {
+            font-size: 9px;
+            background: rgba(232,160,32,0.15);
+            color: var(--accent);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .tbc-badge {
+            font-size: 9px;
+            background: rgba(51,136,204,0.15);
+            color: var(--discussion);
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .outgoing { color: var(--text-muted); }
+        .staying { color: var(--success); }
+        .new-role { color: var(--accent); }
+
+        /* Divider */
+        .section-divider {
+            text-align: center;
+            padding: 16px 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section-divider span {
+            background: var(--bg);
+            padding: 0 12px;
+            position: relative;
+        }
+        .section-divider::before {
+            content: '';
+            display: block;
+            height: 1px;
+            background: var(--border);
+            position: relative;
+            top: 10px;
+        }
+
+        /* Thank you card */
+        .thankyou-card {
+            background: linear-gradient(135deg, rgba(232,160,32,0.08), rgba(245,200,66,0.04));
+            border: 1px solid rgba(232,160,32,0.2);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .thankyou-card h3 { font-size: 16px; color: var(--accent); margin-bottom: 6px; }
+        .thankyou-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+        /* Notes input */
+        .input-group { margin-top: 12px; }
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .input-group textarea {
+            width: 100%;
+            min-height: 56px;
+            padding: 10px 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        .input-group textarea:focus { outline: none; border-color: var(--accent); }
+        .input-group textarea::placeholder { color: var(--text-muted); opacity: 0.5; }
+        .item-submit-row { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        .btn-item-submit {
+            padding: 9px 18px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-item-submit:active { opacity: 0.8; }
+        .btn-item-submit.sent { background: var(--success); color: #fff; }
+        .item-submit-status { font-size: 12px; color: var(--success); font-weight: 600; opacity: 0; transition: opacity 0.3s; }
+        .item-submit-status.show { opacity: 1; }
+
+        /* Footer */
+        .meeting-footer {
+            text-align: center;
+            padding: 24px 0 40px;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        @media (max-width: 540px) {
+            .header h1 { font-size: 24px; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .info-bar { grid-template-columns: 1fr; }
+            .roles-table { font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+    <div class="container">
+        <div class="logo">Poynton &amp; District Round Table 1064 &middot; Est. 1972</div>
+        <h1>Annual General Meeting</h1>
+        <div class="year-badge">2025 &ndash; 2026</div>
+        <div class="date"><!-- DATE TBC --> &middot; 19:30</div>
+        <div class="venue">Appayon Curry House, Poynton</div>
+        <p class="tagline">Two years of community, charity, and good times. Tonight we celebrate what we&rsquo;ve built, <strong>hand over the chair</strong>, and set PDRT up for 2027.</p>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- Stats bar -->
+    <div class="stats-bar">
+        <div class="stat highlight">
+            <div class="stat-val">&pound;76k</div>
+            <div class="stat-label">Raised over 2 years</div>
+        </div>
+        <div class="stat">
+            <div class="stat-val">&pound;26k</div>
+            <div class="stat-label">Donated this year</div>
+        </div>
+        <div class="stat">
+            <div class="stat-val">16</div>
+            <div class="stat-label">Causes supported</div>
+        </div>
+        <div class="stat">
+            <div class="stat-val">10</div>
+            <div class="stat-label">Active members</div>
+        </div>
+    </div>
+
+    <!-- Handover banner -->
+    <div class="handover-banner">
+        <div class="handover-icon">&#127942;</div>
+        <div class="handover-text">
+            <h3>Chair Handover Tonight</h3>
+            <p>Stephen Cotter passes the chairmanship after two years of leadership. Tonight&rsquo;s AGM formally hands the baton to Matt Anthony for 2027.</p>
+            <div class="handover-arrow">
+                <span class="handover-from">Stephen Cotter (2025&ndash;26)</span>
+                <span class="handover-sep">&#8594;</span>
+                <span class="handover-to">Matt Anthony (2027)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meeting info -->
+    <div class="info-bar">
+        <div class="info-item">
+            <div class="info-label">Outgoing Chair</div>
+            <div class="info-value">Stephen Cotter</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">Minutes</div>
+            <div class="info-value">Tom Williamson</div>
+        </div>
+        <div class="info-item full">
+            <div class="info-label">Apologies</div>
+            <div class="info-value">&mdash;</div>
+        </div>
+    </div>
+
+    <!-- Governance reminder -->
+    <div class="gov-notice">
+        <h3>AGM — How it works</h3>
+        <ul>
+            <li><strong>Quorum:</strong> At least 2 of our 3 trustees must be present for decisions to be valid (Chairman, Treasurer, Community Officer)</li>
+            <li><strong>Voting:</strong> Every active member gets a vote. Honorary members are welcome tonight but do not vote. Tied votes go to the Chair.</li>
+            <li><strong>Constitution vote:</strong> Requires a simple majority of active members present</li>
+            <li><strong>Officer elections:</strong> Each role confirmed by a show of hands &mdash; pre-agreed candidates listed in Item 7</li>
+        </ul>
+    </div>
+
+    <!-- Quick nav timeline -->
+    <div class="timeline">
+        <a class="tl-item" href="#item-1"><span class="tl-num">1</span><span class="tl-time">5m</span><span class="tl-badge" style="background:var(--update)"></span></a>
+        <a class="tl-item" href="#item-2"><span class="tl-num">2</span><span class="tl-time">10m</span><span class="tl-badge" style="background:var(--gold)"></span></a>
+        <a class="tl-item" href="#item-3"><span class="tl-num">3</span><span class="tl-time">10m</span><span class="tl-badge" style="background:var(--update)"></span></a>
+        <a class="tl-item" href="#item-4"><span class="tl-num">4</span><span class="tl-time">10m</span><span class="tl-badge" style="background:var(--update)"></span></a>
+        <a class="tl-item" href="#item-5"><span class="tl-num">5</span><span class="tl-time">15m</span><span class="tl-badge" style="background:var(--vote)"></span></a>
+        <a class="tl-item" href="#item-6"><span class="tl-num">6</span><span class="tl-time">20m</span><span class="tl-badge" style="background:var(--accent)"></span></a>
+        <a class="tl-item" href="#item-7"><span class="tl-num">7</span><span class="tl-time">5m</span><span class="tl-badge" style="background:var(--discussion)"></span></a>
+    </div>
+
+    <!-- Name bar -->
+    <div style="margin-bottom:16px;">
+        <label for="attendee-name" style="font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Your name</label>
+        <input type="text" id="attendee-name" placeholder="e.g. Dan, Matt, Tom..." autocomplete="name" style="width:100%;padding:10px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:15px;outline:none;">
+        <div style="font-size:12px;color:var(--text-muted);margin-top:6px;">Tap any item to expand it. Each section has a notes box &mdash; hit Submit to email it to Tom for the minutes.</div>
+    </div>
+
+    <!-- AGENDA -->
+    <div class="agenda">
+
+        <!-- ============================================================ -->
+        <!-- 1. WELCOME & APOLOGIES -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-1">
+            <div class="item-header" onclick="toggleItem(this)">
+                <span class="item-num">1</span>
+                <div class="item-info">
+                    <div class="item-title">Welcome &amp; Apologies</div>
+                    <div class="item-meta">
+                        <span class="badge badge-update">Update</span>
+                        <span class="item-lead">SC</span>
+                        <span class="item-time">5 mins</span>
+                    </div>
+                </div>
+                <span class="chevron">&#9662;</span>
+            </div>
+            <div class="item-body"><div class="item-content">
+                <div class="block">
+                    <h4>Opening</h4>
+                    <ul>
+                        <li>Record attendance and confirm <strong>quorum</strong> (at least 2 of our 3 trustees present)</li>
+                        <li>Welcome honorary members and note they are guests of the AGM &mdash; voting is for active members</li>
+                        <li>Note any apologies received</li>
+                        <li>Confirm minutes of the last AGM / business meeting as a true record</li>
+                    </ul>
+                </div>
+                <div class="block">
+                    <h4>Quick housekeeping</h4>
+                    <ul>
+                        <li>This is PDRT&rsquo;s Annual General Meeting for the <strong>2025&ndash;26 year</strong></li>
+                        <li>Agenda covers: year review, finances, donations, constitution vote, officer handover</li>
+                        <li>Target close: <strong>~21:15</strong> (75 mins)</li>
+                    </ul>
+                </div>
+                <div class="input-group">
+                    <label>Minutes &mdash; attendance &amp; apologies</label>
+                    <textarea data-item="item_1" placeholder="Names present, apologies..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit to Tom</button>
+                        <span class="item-submit-status">Sent</span>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+
+        <div class="section-divider"><span>The Year in Review</span></div>
+
+        <!-- ============================================================ -->
+        <!-- 2. CHAIR'S ADDRESS -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-2">
+            <div class="item-header" onclick="toggleItem(this)">
+                <span class="item-num">2</span>
+                <div class="item-info">
+                    <div class="item-title">Chair&rsquo;s Address &mdash; 2025/26 in Review</div>
+                    <div class="item-meta">
+                        <span class="badge badge-celebration">Celebration</span>
+                        <span class="item-lead">SC</span>
+                        <span class="item-time">10 mins</span>
+                    </div>
+                </div>
+                <span class="chevron">&#9662;</span>
+            </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">Stephen took over the chair from Jon Radcliffe in 2025. This is a look back at what the club achieved over two years and a chance to thank the people who made it happen.</div>
+
+                <div class="block">
+                    <h4>What we set out to do</h4>
+                    <ul>
+                        <li>Keep Bonfire Night and the Santa Rounds going strong as the community events Poynton relies on</li>
+                        <li>Give away more money to better causes, more transparently</li>
+                        <li>Give the club proper structure &mdash; constitution, handbook, clear roles &mdash; to make it easier for the next generation of members to pick up and run with</li>
+                        <li>Grow the membership and bring in fresh energy</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>What we delivered</h4>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">&#127869;</div>
+                    <div class="achievement-body">
+                        <div class="achievement-title">Bonfire Night &mdash; continued and improved</div>
+                        <div class="achievement-desc">Two successful Bonfire Nights. The 2025 debrief produced the most detailed action plan we&rsquo;ve ever had &mdash; lighting, ticketing, gate management, site layout, bar, and fireworks all being improved for 2026. Jon Fuller has taken over as Bonfire Officer with James Price stepping up as Deputy.</div>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">&#127877;</div>
+                    <div class="achievement-body">
+                        <div class="achievement-title">Santa Rounds &mdash; growing year on year</div>
+                        <div class="achievement-desc">Santa 2025/26: <strong>&pound;1,562 raised, &pound;815 profit</strong> &mdash; more than double the previous year&rsquo;s &pound;339 profit. Matt Anthony ran a strong operation. The sleigh has been serviced and is in better shape than it&rsquo;s been in years.</div>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">&#128176;</div>
+                    <div class="achievement-body">
+                        <div class="achievement-title">&pound;76,200 raised over two years</div>
+                        <div class="achievement-desc">&pound;42,500 in 2024/25 and &pound;33,700 in 2025/26. Every penny from Bonfire Night and the Santa Rounds. Allocated to local schools, community groups, and charitable causes across Poynton and the surrounding area.</div>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">&#128221;</div>
+                    <div class="achievement-body">
+                        <div class="achievement-title">Constitution &amp; Handbook &mdash; built from scratch</div>
+                        <div class="achievement-desc">Dan Robinson drafted a full constitution giving the club legal and structural clarity it never had before. A member handbook was also created to help new members understand roles and how we operate. Both are being adopted at this AGM.</div>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">&#129309;</div>
+                    <div class="achievement-body">
+                        <div class="achievement-title">New roles &amp; succession planning</div>
+                        <div class="achievement-desc">This year saw the creation of a <strong>Mental Health Officer</strong> (Dr Chris McHague), a <strong>Deputy Treasurer</strong> (Jim Hirst shadowing Tom), and a formal <strong>Vice Chair</strong> (Matt Anthony). The succession pipeline from DBO &rarr; BO &rarr; Vice Chair &rarr; Chair is now mapped out years ahead.</div>
+                    </div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="achievement-icon">&#128101;</div>
+                    <div class="achievement-body">
+                        <div class="achievement-title">Membership growing</div>
+                        <div class="achievement-desc"><strong>10 active members, 7 honorary members, 5 potential new members</strong> in the pipeline. Honorary membership formalised and growing as past members stay connected.</div>
+                    </div>
+                </div>
+
+                <div class="block" style="margin-top:16px;">
+                    <h4>Thank yous</h4>
+                    <ul>
+                        <li><strong>Dan Robinson</strong> &mdash; constitution, handbook, and marketing. An enormous amount of work, done brilliantly.</li>
+                        <li><strong>Tom Williamson</strong> &mdash; treasurer and IT officer for a second year. Keeps the finances clean and the tools running.</li>
+                        <li><strong>Jon Fuller</strong> &mdash; stepping up as Bonfire Officer and bringing serious organisation to the biggest event of our year.</li>
+                        <li><strong>John Dunlop</strong> &mdash; Community Officer and honorary member. Institutional knowledge and steady hands.</li>
+                        <li><strong>Matt Anthony</strong> &mdash; ran a superb Santa operation and is ready to take on the chairmanship.</li>
+                        <li><strong>Jon Radcliffe</strong> &mdash; for handing over the chair in good shape and continuing to contribute as Membership Officer.</li>
+                        <li><strong>James Price, Matt Wallace, Jim Hirst, Dr Chris McHague</strong> &mdash; for stepping into new roles and building the future of the club.</li>
+                        <li><strong>Pete Cole</strong> &mdash; for years of service as Programme Officer. A tough act to follow.</li>
+                        <li>And to <strong>every member</strong> who turned up on a cold November night, pulled on a Santa hat, or gave a Saturday to the lockup. This is you.</li>
+                    </ul>
+                </div>
+
+                <div class="input-group">
+                    <label>Minutes &mdash; Chair&rsquo;s address notes</label>
+                    <textarea data-item="item_2" placeholder="Key points, any additions..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit to Tom</button>
+                        <span class="item-submit-status">Sent</span>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 3. TREASURER'S REPORT -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-3">
+            <div class="item-header" onclick="toggleItem(this)">
+                <span class="item-num">3</span>
+                <div class="item-info">
+                    <div class="item-title">Treasurer&rsquo;s Report</div>
+                    <div class="item-meta">
+                        <span class="badge badge-update">Update</span>
+                        <span class="item-lead">Tom W</span>
+                        <span class="item-time">10 mins</span>
+                    </div>
+                </div>
+                <span class="chevron">&#9662;</span>
+            </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">Accounts for the 2025&ndash;26 year. The financial year was changed to Jan&ndash;Dec at last year&rsquo;s business meeting, meaning this set of accounts covers a clean calendar year for the first time.</div>
+
+                <div class="block">
+                    <h4>2025/26 Fundraising</h4>
+                </div>
+
+                <div class="finance-row sub"><span class="f-label">Bonfire Night 2025 (gross)</span><span class="f-val">&pound;~32,000</span></div>
+                <div class="finance-row sub"><span class="f-label">Santa Rounds 2025/26 (turnover)</span><span class="f-val">&pound;1,562</span></div>
+                <div class="finance-row sub"><span class="f-label">Less: Santa costs</span><span class="f-val" style="color:var(--vote)">&minus;&pound;747</span></div>
+                <div class="finance-row sub"><span class="f-label">Santa Rounds profit</span><span class="f-val">&pound;815</span></div>
+                <div class="finance-row total" style="margin-top:8px;"><span class="f-label">Total gross fundraising 2025/26</span><span class="f-val">&pound;33,700</span></div>
+
+                <div class="block" style="margin-top:16px;">
+                    <h4>Donations pot breakdown (2025/26)</h4>
+                </div>
+
+                <div class="finance-row sub"><span class="f-label">Gross fundraising</span><span class="f-val">&pound;33,700</span></div>
+                <div class="finance-row sub"><span class="f-label">Less: prior pledges outstanding</span><span class="f-val" style="color:var(--vote)">&minus;&pound;1,700</span></div>
+                <div class="finance-row total" style="margin-top:4px;margin-bottom:12px;"><span class="f-label">Usable pot (Donations Night 2026)</span><span class="f-val">&pound;32,000</span></div>
+
+                <div class="finance-row sub"><span class="f-label">&#x2192; Local groups &amp; schools (30%)</span><span class="f-val">&pound;9,600</span></div>
+                <div class="finance-row sub"><span class="f-label">&#x2192; Partner groups &mdash; 41C / LC / Tangent (10%)</span><span class="f-val">&pound;3,200</span></div>
+                <div class="finance-row sub"><span class="f-label">&#x2192; Donation requests voted tonight (50%)</span><span class="f-val">&pound;10,038</span></div>
+                <div class="finance-row sub"><span class="f-label">&#x2192; In-year pot held back (10%)</span><span class="f-val">&pound;3,200</span></div>
+                <div class="finance-row total" style="margin-top:4px;"><span class="f-label">Total allocated</span><span class="f-val">&pound;26,038</span></div>
+
+                <div class="block" style="margin-top:16px;">
+                    <h4>Year-on-year fundraising</h4>
+                    <ul>
+                        <li><strong>2023/24:</strong> &pound;35,000 raised</li>
+                        <li><strong>2024/25:</strong> &pound;42,500 raised &mdash; a record year</li>
+                        <li><strong>2025/26:</strong> &pound;33,700 raised &mdash; solid year, slightly down on record</li>
+                        <li><strong>2-year total under Stephen&rsquo;s chairmanship:</strong> &pound;76,200</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Charity Commission</h4>
+                    <ul>
+                        <li>Accounts are up to date and filed with the Charity Commission</li>
+                        <li>Financial year now runs January&ndash;December (agreed at Feb 2026 business meeting)</li>
+                        <li>Jim Hirst has been shadowing as Deputy Treasurer and is ready to step in for 2027 handover</li>
+                    </ul>
+                </div>
+
+                <div class="input-group">
+                    <label>Minutes &mdash; finance notes</label>
+                    <textarea data-item="item_3" placeholder="Any questions, clarifications, decisions on finances..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit to Tom</button>
+                        <span class="item-submit-status">Sent</span>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 4. WHERE THE MONEY WENT -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-4">
+            <div class="item-header" onclick="toggleItem(this)">
+                <span class="item-num">4</span>
+                <div class="item-info">
+                    <div class="item-title">Where the Money Went &mdash; 2025/26 Donations</div>
+                    <div class="item-meta">
+                        <span class="badge badge-celebration">Celebration</span>
+                        <span class="item-lead">JD / SC</span>
+                        <span class="item-time">10 mins</span>
+                    </div>
+                </div>
+                <span class="chevron">&#9662;</span>
+            </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">This is the whole point. Everything we do at Bonfire and Santa ends up here &mdash; real money going to real people in Poynton and the surrounding area.</div>
+
+                <div class="block">
+                    <h4>Local groups &amp; schools &mdash; &pound;9,600</h4>
+                    <ul>
+                        <li>23 local groups thanked for their support at Bonfire Night and Santa Rounds</li>
+                        <li>From school PTAs to sports clubs &mdash; allocated by shares based on how much they helped</li>
+                        <li>Includes: Poynton High School PTA, Lower Park, Vernon Junior, Cheadle Hulme Primary, Lacrosse, Cricket Club, JFC Phoenix, 1st Poynton Scouts, Poynton District Guides, Hollies Pre-School, Sports Club (car park), and more</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Donation requests &mdash; &pound;10,038 agreed</h4>
+                </div>
+
+                <div class="donation-item">
+                    <div><div class="d-name">Just-Ice Poynton</div><div class="d-desc">2-year paid training for survivors of modern slavery</div></div>
+                    <div class="d-amount">&pound;2,500</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">Poynton Pedals for All</div><div class="d-desc">Electric side-by-side bike for people with disabilities</div></div>
+                    <div class="d-amount">&pound;1,000</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">Poynton Parent Carers Group</div><div class="d-desc">12 months of support group for parents of disabled children</div></div>
+                    <div class="d-amount">&pound;1,000</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">Poynton First Responders</div><div class="d-desc">Vehicle insurance for the community response car (PDRT-donated car)</div></div>
+                    <div class="d-amount">&pound;1,000</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">Crown Green Bowls &mdash; Poynton Legion</div><div class="d-desc">Restoring the community bowling green</div></div>
+                    <div class="d-amount">&pound;1,160</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">2nd Poynton Scouts</div><div class="d-desc">6 lightweight tents for Cubs &amp; Beavers</div></div>
+                    <div class="d-amount">&pound;882</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">Greater Manchester Blood Bikes</div><div class="d-desc">Insulated boxes to transport donor breast milk for premature babies</div></div>
+                    <div class="d-amount">&pound;500</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">Aspire &mdash; Spinal Injury Charity</div><div class="d-desc">Maintenance on accessible flat in Stockport</div></div>
+                    <div class="d-amount">&pound;500</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">East Cheshire Hospice</div><div class="d-desc">Towards specialist care beds</div></div>
+                    <div class="d-amount">&pound;500</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">St George&rsquo;s Singers</div><div class="d-desc">Staging frames so 96-member choir can perform safely</div></div>
+                    <div class="d-amount">&pound;396</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">Girlguiding Poynton District (4 girls)</div><div class="d-desc">International trips for girls who volunteer at PDRT events</div></div>
+                    <div class="d-amount">&pound;400</div>
+                </div>
+                <div class="donation-item">
+                    <div><div class="d-name">Poynton High School</div><div class="d-desc">Summer tea party for 65 elderly &amp; care home residents</div></div>
+                    <div class="d-amount">&pound;200</div>
+                </div>
+
+                <div class="finance-row total" style="margin-top:12px;">
+                    <span class="f-label">Total donation requests agreed</span>
+                    <span class="f-val">&pound;10,038</span>
+                </div>
+
+                <div class="block" style="margin-top:16px;">
+                    <h4>Partner groups &mdash; &pound;3,200</h4>
+                    <ul>
+                        <li><strong>41 Club</strong> &mdash; &pound;1,066 (to choose their own cause)</li>
+                        <li><strong>Ladies Circle</strong> &mdash; &pound;1,066</li>
+                        <li><strong>Tangent</strong> &mdash; &pound;1,068</li>
+                    </ul>
+                </div>
+
+                <div class="finance-row total">
+                    <span class="f-label">Grand total allocated to the community</span>
+                    <span class="f-val">&pound;26,038</span>
+                </div>
+
+                <div class="input-group" style="margin-top:12px;">
+                    <label>Minutes &mdash; donations notes</label>
+                    <textarea data-item="item_4" placeholder="Any questions or additions..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit to Tom</button>
+                        <span class="item-submit-status">Sent</span>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+
+        <div class="section-divider"><span>Formal Business</span></div>
+
+        <!-- ============================================================ -->
+        <!-- 5. CONSTITUTION VOTE -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-5">
+            <div class="item-header" onclick="toggleItem(this)">
+                <span class="item-num">5</span>
+                <div class="item-info">
+                    <div class="item-title">Adoption of the New Constitution</div>
+                    <div class="item-meta">
+                        <span class="badge badge-vote">Vote Required</span>
+                        <span class="item-lead">Dan R</span>
+                        <span class="item-time">15 mins</span>
+                    </div>
+                </div>
+                <span class="chevron">&#9662;</span>
+            </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">Dan Robinson drafted PDRT&rsquo;s first proper constitution this year, pulling together everything from RTBI guidance, decisions made at council level, and the club&rsquo;s own history. It&rsquo;s been reviewed by the council and has buy-in from all active members. Tonight we adopt it formally.</div>
+
+                <div class="block">
+                    <h4>What the constitution covers</h4>
+                    <ul>
+                        <li><strong>Membership tiers:</strong> Active, Honorary, and Potential &mdash; with clear criteria for each</li>
+                        <li><strong>Officer roles:</strong> Defined responsibilities and term lengths for every position</li>
+                        <li><strong>Succession pipeline:</strong> DBO &rarr; BO &rarr; Vice Chair &rarr; Chair mapped out explicitly</li>
+                        <li><strong>Voting rules:</strong> Quorum, majority requirements, and what decisions need a formal vote</li>
+                        <li><strong>Eligibility for Vice Chair:</strong> Completed at least one full year as a Council Officer, OR demonstrated active participation in Bonfire operations, OR supported by a majority vote at AGM</li>
+                        <li><strong>Charitable governance:</strong> Trustee responsibilities, Charity Commission obligations</li>
+                        <li><strong>Financial controls:</strong> Spending authority, donations process, accounting year</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Journey to this point</h4>
+                    <ul>
+                        <li>Drafted by Dan Robinson, incorporating RTBI guidance and council discussions</li>
+                        <li>Reviewed by JD, Jon Fuller, Matt Anthony, Matt Wallace, and Tom Williamson</li>
+                        <li>Small amendment: Vice Chair eligibility changed from &ldquo;and&rdquo; to &ldquo;or&rdquo; to allow flexibility</li>
+                        <li>Final version shared with all council members in March 2026</li>
+                    </ul>
+                </div>
+
+                <div class="gov-callout">
+                    <strong>Why this matters</strong>
+                    Without a formal constitution, every handover depends on institutional memory. With one, any new member can pick up the handbook and understand how PDRT works. This is the foundation for the next 50 years.
+                </div>
+
+                <div class="vote-box">
+                    <div class="resolution">Resolution 1 of 2</div>
+                    <div class="resolution-text">To formally adopt the PDRT Constitution (2026 edition) as drafted by Dan Robinson and reviewed by the Council, as the governing document of Poynton &amp; District Round Table 1064 with immediate effect.</div>
+                    <div class="vote-record">FOR &nbsp;___ &nbsp;&nbsp; AGAINST &nbsp;___ &nbsp;&nbsp; ABSTAIN &nbsp;___ &nbsp;&nbsp; RESULT &nbsp;___</div>
+                </div>
+
+                <div class="input-group">
+                    <label>Minutes &mdash; constitution vote</label>
+                    <textarea data-item="item_5" placeholder="Vote result, any discussion points..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit to Tom</button>
+                        <span class="item-submit-status">Sent</span>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 6. OFFICER HANDOVER -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-6">
+            <div class="item-header" onclick="toggleItem(this)">
+                <span class="item-num">6</span>
+                <div class="item-info">
+                    <div class="item-title">Officer Elections &amp; Handover for 2027</div>
+                    <div class="item-meta">
+                        <span class="badge badge-handover">Handover</span>
+                        <span class="item-lead">SC / All</span>
+                        <span class="item-time">20 mins</span>
+                    </div>
+                </div>
+                <span class="chevron">&#9662;</span>
+            </div>
+            <div class="item-body"><div class="item-content">
+                <div class="context">The Chair&rsquo;s term ends tonight. Officers for 2027 have been agreed in advance through the council &mdash; tonight we confirm them formally as a club and Stephen passes the chair to Matt Anthony.</div>
+
+                <div class="block">
+                    <h4>Outgoing council &mdash; 2026</h4>
+                </div>
+                <table class="roles-table">
+                    <tr><th>Role</th><th>2026 Holder</th><th>Status</th></tr>
+                    <tr>
+                        <td><span class="role-name">Chair <span class="trustee-badge">Trustee</span></span></td>
+                        <td>Stephen Cotter</td>
+                        <td><span class="outgoing">Stepping down</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Vice Chair</span></td>
+                        <td>Matt Anthony</td>
+                        <td><span class="outgoing">Stepping up to Chair</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Treasurer <span class="trustee-badge">Trustee</span></span></td>
+                        <td>Tom Williamson</td>
+                        <td><span class="staying">Continuing through handover</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Deputy Treasurer</span></td>
+                        <td>Jim Hirst</td>
+                        <td><span class="outgoing">Stepping up to Treasurer</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Community Officer <span class="trustee-badge">Trustee</span></span></td>
+                        <td>John Dunlop</td>
+                        <td><span class="outgoing">Stepping down</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Bonfire Officer</span></td>
+                        <td>Jon Fuller</td>
+                        <td><span class="outgoing">Stepping down after one year</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Deputy Bonfire Officer</span></td>
+                        <td>James Price</td>
+                        <td><span class="outgoing">Stepping up to Bonfire Officer</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Programme Officer</span></td>
+                        <td>Matt Wallace</td>
+                        <td><span class="outgoing">Role moving to new holder</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Mental Health Officer</span></td>
+                        <td>Dr Chris McHague</td>
+                        <td><span class="staying">Continuing</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Marketing Officer</span></td>
+                        <td>Dan Robinson</td>
+                        <td><span class="staying">Continuing</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Membership Officer</span></td>
+                        <td>Jon Radcliffe</td>
+                        <td><span class="staying">Continuing</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">IT Officer</span></td>
+                        <td>Tom Williamson</td>
+                        <td><span class="staying">Continuing</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Santa Officer</span></td>
+                        <td>Matt Anthony</td>
+                        <td><span class="outgoing">Stepping up to Chair &mdash; successor TBC</span></td>
+                    </tr>
+                </table>
+
+                <div class="block" style="margin-top:16px;">
+                    <h4>Incoming council &mdash; 2027 (for confirmation tonight)</h4>
+                </div>
+                <table class="roles-table">
+                    <tr><th>Role</th><th>2027 Proposed</th><th>Notes</th></tr>
+                    <tr>
+                        <td><span class="role-name">Chair <span class="trustee-badge">Trustee</span></span></td>
+                        <td><strong class="new-role">Matt Anthony</strong></td>
+                        <td>Vice Chair stepping up &mdash; the plan</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Vice Chair</span></td>
+                        <td><strong class="new-role">Jon Fuller</strong></td>
+                        <td>Outgoing BO entering the pipeline</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Treasurer <span class="trustee-badge">Trustee</span></span></td>
+                        <td><strong class="new-role">Jim Hirst</strong></td>
+                        <td>Has shadowed Tom as Deputy Treasurer</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Community Officer <span class="trustee-badge">Trustee</span></span></td>
+                        <td><strong class="new-role">Dr Chris McHague</strong></td>
+                        <td>Also continuing as Mental Health Officer</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Bonfire Officer</span></td>
+                        <td><strong class="new-role">James Price</strong></td>
+                        <td>Has shadowed Jon as Deputy BO</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Deputy Bonfire Officer</span></td>
+                        <td><strong class="new-role">Matt Wallace</strong></td>
+                        <td>Entering the pipeline</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Deputy Treasurer</span></td>
+                        <td><span class="tbc-badge">TBC</span></td>
+                        <td>To be confirmed</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Mental Health Officer</span></td>
+                        <td><strong class="new-role">Dr Chris McHague</strong></td>
+                        <td>Continuing</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Marketing Officer</span></td>
+                        <td><strong class="new-role">Dan Robinson</strong></td>
+                        <td>Continuing</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Membership Officer</span></td>
+                        <td><span class="tbc-badge">TBC</span></td>
+                        <td>Jon Radcliffe stepping back after two years</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Programme Officer</span></td>
+                        <td><span class="tbc-badge">New person needed</span></td>
+                        <td>Open &mdash; volunteers welcome</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">Santa Officer</span></td>
+                        <td><span class="tbc-badge">TBC</span></td>
+                        <td>Matt Anthony moving to Chair &mdash; open</td>
+                    </tr>
+                    <tr>
+                        <td><span class="role-name">IT Officer</span></td>
+                        <td><span class="tbc-badge">TBC</span></td>
+                        <td>Tom W stepping back &mdash; open</td>
+                    </tr>
+                </table>
+
+                <div class="block" style="margin-top:16px;">
+                    <h4>Succession pipeline &mdash; the big picture</h4>
+                    <ul>
+                        <li>This is the first AGM where the chair succession runs <strong>3 years deep</strong>: Matt (2027) &rarr; Jon Fuller (2028) &rarr; James Price (2029)</li>
+                        <li>The DBO &rarr; BO &rarr; Vice &rarr; Chair ladder is now formally embedded in the constitution</li>
+                        <li>Deputy Treasurer in place means financial continuity is no longer dependent on one person</li>
+                    </ul>
+                </div>
+
+                <div class="vote-box">
+                    <div class="resolution">Resolution 2 of 2</div>
+                    <div class="resolution-text">To confirm the officers of Poynton &amp; District Round Table 1064 for 2027 as listed above, and to formally appoint Matt Anthony as Chairman with effect from the close of this meeting.</div>
+                    <div class="vote-record">FOR &nbsp;___ &nbsp;&nbsp; AGAINST &nbsp;___ &nbsp;&nbsp; ABSTAIN &nbsp;___ &nbsp;&nbsp; RESULT &nbsp;___</div>
+                </div>
+
+                <div class="chair-q">
+                    <strong>Outgoing Chair</strong>
+                    Stephen to say a few words before passing the chair to Matt &mdash; and Matt to respond.
+                </div>
+
+                <div class="input-group">
+                    <label>Minutes &mdash; officer elections</label>
+                    <textarea data-item="item_6" placeholder="Vote results, any nominations from the floor, TBC roles resolved..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit to Tom</button>
+                        <span class="item-submit-status">Sent</span>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+
+        <div class="section-divider"><span>Close</span></div>
+
+        <!-- ============================================================ -->
+        <!-- 7. AOB -->
+        <!-- ============================================================ -->
+        <div class="item" id="item-7">
+            <div class="item-header" onclick="toggleItem(this)">
+                <span class="item-num">7</span>
+                <div class="item-info">
+                    <div class="item-title">AOB &amp; Looking Ahead to 2027</div>
+                    <div class="item-meta">
+                        <span class="badge badge-discussion">Discussion</span>
+                        <span class="item-lead">Matt A / All</span>
+                        <span class="item-time">5 mins</span>
+                    </div>
+                </div>
+                <span class="chevron">&#9662;</span>
+            </div>
+            <div class="item-body"><div class="item-content">
+                <div class="block">
+                    <h4>Incoming Chair&rsquo;s first words</h4>
+                    <ul>
+                        <li>Matt Anthony to share his priorities for 2027</li>
+                        <li>Bonfire 2026: Jon Fuller&rsquo;s 20-point improvement plan is already underway &mdash; biggest changes in years</li>
+                        <li>New website launching (Dan R) &mdash; Poynton Round Table finally gets a proper web presence</li>
+                        <li>5 potential new members in the pipeline &mdash; target: grow active membership above 10</li>
+                        <li>Mentell / men&rsquo;s mental health group in Poynton &mdash; Dr Chris to follow up on how PDRT can help</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>TBC roles to resolve early</h4>
+                    <ul>
+                        <li><strong>Santa Officer:</strong> needed before Christmas planning starts &mdash; raise in first council meeting</li>
+                        <li><strong>Programme Officer:</strong> social calendar needs an owner by summer</li>
+                        <li><strong>IT Officer:</strong> ticket platform review ongoing &mdash; conclusion needed by August 2026</li>
+                        <li><strong>Deputy Treasurer:</strong> Jim stepping up means the deputy slot is now open</li>
+                    </ul>
+                </div>
+
+                <div class="block">
+                    <h4>Any other business</h4>
+                    <ul>
+                        <li>Open floor</li>
+                    </ul>
+                </div>
+
+                <div class="input-group">
+                    <label>Minutes &mdash; AOB</label>
+                    <textarea data-item="item_7" placeholder="Any items raised, actions agreed..."></textarea>
+                    <div class="item-submit-row">
+                        <button class="btn-item-submit" onclick="submitItem(this)">Submit to Tom</button>
+                        <span class="item-submit-status">Sent</span>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+
+    </div><!-- /agenda -->
+
+    <!-- Thank you card -->
+    <div class="thankyou-card">
+        <h3>Thanks for two great years, Stephen.</h3>
+        <p>From Bonfire to Santa, from the first constitution to the first handbook &mdash; PDRT 1064 is in a stronger place than when you took it on. The chair passes tonight in good hands.</p>
+    </div>
+
+    <div class="meeting-footer">
+        AGM closes &mdash; target 21:15<br>
+        Poynton &amp; District Round Table 1064 &middot; Est. 1972 &middot; Registered Charity<br>
+        <span style="color:var(--accent)">c0tter.github.io/agm-2026</span>
+    </div>
+
+</div><!-- /container -->
+
+<script>
+function toggleItem(header) {
+    header.closest('.item').classList.toggle('open');
+}
+
+const itemTitles = {
+    item_1: 'Welcome & Apologies',
+    item_2: "Chair's Address — 2025/26 in Review",
+    item_3: "Treasurer's Report",
+    item_4: 'Where the Money Went',
+    item_5: 'Adoption of the New Constitution',
+    item_6: 'Officer Elections & Handover',
+    item_7: 'AOB & Looking Ahead',
+};
+
+function submitItem(btn) {
+    const name = document.getElementById('attendee-name').value.trim();
+    if (!name) {
+        const input = document.getElementById('attendee-name');
+        input.focus();
+        input.style.borderColor = 'var(--vote)';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => input.style.borderColor = '', 2000);
+        return;
+    }
+
+    const itemContent = btn.closest('.item-content');
+    const textarea = itemContent.querySelector('textarea');
+    const itemKey = textarea.getAttribute('data-item');
+    const itemNum = itemKey.replace('item_', '');
+    const title = itemTitles[itemKey] || 'Item ' + itemNum;
+    const notes = textarea.value.trim();
+
+    if (!notes) {
+        textarea.focus();
+        textarea.style.borderColor = 'var(--vote)';
+        setTimeout(() => textarea.style.borderColor = '', 2000);
+        return;
+    }
+
+    const subject = encodeURIComponent('PDRT AGM 2026 — ' + itemNum + '. ' + title + ' — ' + name);
+    const body = encodeURIComponent('AGM 2026 note from ' + name + '\n\n' + itemNum + '. ' + title + '\n' + notes + '\n');
+
+    const a = document.createElement('a');
+    a.href = 'mailto:stephencotter1990@gmail.com?subject=' + subject + '&body=' + body;
+    a.target = '_blank';
+    a.click();
+
+    const status = btn.nextElementSibling;
+    btn.textContent = 'Sent';
+    btn.classList.add('sent');
+    status.classList.add('show');
+    setTimeout(() => {
+        btn.textContent = 'Resend';
+        btn.classList.remove('sent');
+    }, 2000);
+}
+</script>
+
+</body>
+</html>
