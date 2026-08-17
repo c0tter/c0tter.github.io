@@ -16,6 +16,16 @@
   }
   canvas { display: block; }
 </style>
+<!-- PostHog analytics: cookieless (no consent banner needed), no session recording -->
+<script src="https://eu-assets.i.posthog.com/static/array.js"></script>
+<script>
+  posthog.init('phc_xgSfFY4pe349gr9sBGHhFwFsVn7AQdGN5cNiqNkg5s4K', {
+    api_host: 'https://eu.i.posthog.com',
+    persistence: 'memory',
+    respect_dnt: true,
+    disable_session_recording: true
+  });
+</script>
 </head>
 <body>
 <canvas id="c"></canvas>
